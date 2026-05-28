@@ -44,69 +44,31 @@
   
   .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 5px 0; }
   
-  /* 🌈 CẤU TRÚC AVATAR HIỆU ỨNG 7 SẮC CẦU VỒNG RGB GLOW */
+  /* ✨ ĐÃ SỬA: CẤU TRÚC AVATAR GLOW MÀU GOLD ỔN ĐỊNH CHUẨN UX */
   .avatar-circle { 
     width: 52px; 
     height: 52px; 
     border-radius: 50%; 
-    position: relative; 
+    border: 2px solid var(--border); 
+    background: var(--surface); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    overflow: hidden; 
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    position: relative; 
     user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-
-  /* Tạo vòng tròn màu gradient nền ẩn phía sau */
-  .avatar-circle::before {
-    content: '';
-    position: absolute;
-    inset: -2px; /* Kích thước viền phát sáng */
-    border-radius: 50%;
-    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    background-size: 400%;
-    z-index: 1;
-    opacity: 0.2; /* Mặc định mờ mờ tinh tế */
-    transition: opacity 0.3s ease;
-    /* Hiệu ứng chuyển động dải màu mượt mà */
-    animation: rainbowShift 20s linear infinite;
-  }
-
-  /* Khung chứa ảnh thực tế đè lên trên dải màu nền */
-  .avatar-inner {
-    position: absolute;
-    inset: 1px; /* Tạo khoảng hở cực nhỏ để dải màu lọt qua làm viền */
-    border-radius: 50%;
-    background: var(--surface);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-  }
-  .avatar-inner img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-  .avatar-inner .avatar-initial { font-size: 15px; color: var(--accent); font-weight: 500; }
+  .avatar-circle img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .avatar-circle .avatar-initial { font-size: 15px; color: var(--accent); font-weight: 500; }
   
-  /* 🛠️ HIỆU ỨNG DI CHUỘT VÀO: 7 SẮC CẦU VỒNG RỰC SÁNG & BÙNG NỔ HÀO QUANG (GLOW) */
+  /* HIỆU ỨNG DI CHUỘT PHÁT SÁNG VÀNG GOLD CAO CẤP */
   .avatar-circle:hover { 
+    border-color: var(--accent); 
     transform: scale(1.15);
+    box-shadow: 0 0 15px var(--accent);
     z-index: 5;
-  }
-  .avatar-circle:hover::before {
-    opacity: 1;
-    /* Đẩy ánh sáng neon tỏa ra ngoài dạng cầu vồng siêu đẹp */
-    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.6)) 
-            drop-shadow(0 0 20px rgba(0, 255, 213, 0.4));
-  }
-
-  /* Khởi tạo chuyển động dải màu chạy vô tận */
-  @keyframes rainbowShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
   }
   
   /* KHU VỰC CHIẾU CHÍNH (CỘT PHẢI) */
@@ -296,30 +258,25 @@
     STUDENTS.forEach(s => sGrid.appendChild(createAvatarElement(s, false)));
   }
 
-  // SỬA ĐỔI HÀM KHỞI TẠO ĐỂ ĐƯA LỚP ĐỆM .avatar-inner VÀO PHỤC VỤ HIỆU ỨNG RAINBOW
   function createAvatarElement(person, isTeacher) {
     const circle = document.createElement('div');
     circle.className = 'avatar-circle';
     circle.setAttribute('title', person.name);
     circle.onclick = () => filterByPerson(person.name);
 
-    const inner = document.createElement('div');
-    inner.className = 'avatar-inner';
-
     if (person.img) {
       const img = document.createElement('img');
       img.src = person.img;
       img.alt = person.name;
-      inner.appendChild(img);
+      circle.appendChild(img);
     } else {
       const initial = document.createElement('span');
       initial.className = 'avatar-initial';
       initial.textContent = person.name.charAt(0).toUpperCase();
       if(isTeacher) initial.style.color = '#fff';
-      inner.appendChild(initial);
+      circle.appendChild(initial);
     }
 
-    circle.appendChild(inner);
     return circle;
   }
 
@@ -329,7 +286,13 @@
     currentTab = 'filter';
 
     const searchKey = name.toLowerCase();
-    images = masterImages.filter(img => (img.name || "").toLowerCase().includes(searchKey));
+    
+    images = masterImages.filter(img => {
+      const fileName = (img.name || "").toLowerCase();
+      return fileName.includes(searchKey) || 
+             fileName.includes("tapthe") || 
+             fileName.includes("calop");
+    });
 
     const textEl = document.getElementById('album-count');
     textEl.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> File của: <b>${name}</b> (${images.length})`;
@@ -343,7 +306,7 @@
       document.getElementById('main-video').classList.remove('visible');
       document.getElementById('main-iframe').classList.remove('visible');
       document.getElementById('main-iframe').src = "";
-      document.getElementById('thumb-strip').innerHTML = `<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-solid fa-face-frown"></i> Chưa có ảnh nào đặt tên theo từ khóa "${name}".</div>`;
+      document.getElementById('thumb-strip').innerHTML = `<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-solid fa-face-frown"></i> Chưa có ảnh nào của từ khóa này.</div>`;
       document.getElementById('img-counter').textContent = "0 / 0";
     }
   }
