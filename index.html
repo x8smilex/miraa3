@@ -86,6 +86,10 @@
   .gb-meta { font-size: 12px; font-weight: 500; color: var(--accent); margin-bottom: 4px; }
   .gb-msg { font-size: 14px; line-height: 1.5; }
 
+  /* NÚT SUBMIT LƯU BÚT */
+  .btn-submit-gb { width: 100%; padding: 12px; background: var(--accent); color: #0d0d0d; border: none; border-radius: 6px; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; letter-spacing: 0.05em; transition: opacity 0.2s; }
+  .btn-submit-gb:hover { opacity: 0.85; }
+
   #loading { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
   .spinner { width: 36px; height: 36px; border: 1.5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -154,7 +158,7 @@
     <div class="gb-form">
       <input type="text" id="gb-name" placeholder="Tên của bạn hoặc Tên phụ huynh con..." />
       <textarea id="gb-msg" rows="3" placeholder="Gửi gắm lời chúc, kỷ niệm đáng nhớ tại mái trường..."></textarea>
-      <button class="btn-primary" style="padding: 10px 20px; width:100%;" onclick="submitGuestbook()">Gửi lời chúc ✨</button>
+      <button class="btn-submit-gb" onclick="submitGuestbook()">Gửi lời chúc ✨</button>
     </div>
     <div class="gb-list" id="gb-container"></div>
   </div>
@@ -165,8 +169,8 @@
 </div>
 
 <script>
-  // 🔴 DÁN LINK WEB APP CỦA BẠN VÀO ĐÂY ĐỂ HOẠT ĐỘNG
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynAe8EMpAY8QnBegE49rRl2wQ0HVk2___A8ydDWJktQpi6gYiIqbCeFwNNQlTeo5Answ/exec";
+  // 🔴 THAY ĐƯỜNG LINK WEB APP CỦA BẠN VÀO ĐÂY ĐỂ HOẠT ĐỘNG
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE-gqkmon6XPosd09KVJLPBfphtK1n9Nfd1q0z-xW4ZVjBtMfNA51Rw3UePxS9GgSUzQ/exec";
 
   let allImages = []; 
   let filteredImages = []; 
@@ -177,12 +181,10 @@
 
   window.onload = () => { loadData(); };
 
-  // Đổi Giao Diện Theme (Light / Dark / System)
   function changeTheme(val) {
     document.documentElement.setAttribute('data-theme', val);
   }
 
-  // Chuyển Tab (Tất cả / Khoảnh khắc nổi bật có trên 5 tim)
   function switchTab(tab) {
     currentTab = tab;
     document.getElementById('tab-all').classList.toggle('active', tab === 'all');
@@ -191,14 +193,18 @@
     if (tab === 'all') {
       filteredImages = [...allImages];
     } else {
-      // Khoảnh khắc nổi bật: Lọc ảnh có số lượt thích lớn hơn 0 hoặc lớn hơn số tim bạn muốn cấu hình
-      filteredImages = allImages.filter(img => img.likes > 0); 
+      filteredImages = allImages.filter(img => (img.likes || 0) > 0); 
     }
     
     document.getElementById('album-count').textContent = filteredImages.length + ' ảnh';
     buildThumbs();
     if (filteredImages.length > 0) {
-      showImage(0);
+      // Đọc chỉ số ảnh từ thanh địa chỉ URL nếu có tham số ?i=...
+      const p = new URLSearchParams(location.search);
+      let startIdx = parseInt(p.get('i') || '0');
+      if (startIdx >= filteredImages.length || startIdx < 0) startIdx = 0;
+      
+      showImage(startIdx);
     } else {
       clearViewer();
     }
@@ -206,15 +212,17 @@
 
   async function loadData() {
     try {
+      if(APPS_SCRIPT_URL.includes("DÁN_LINK")) {
+        alert("Vui lòng dán link Web App Apps Script mới vào biến APPS_SCRIPT_URL ở cuối file.");
+        return;
+      }
       const res = await fetch(APPS_SCRIPT_URL);
       const data = await res.json();
       allImages = data.files || [];
       
-      // Render lưu bút
       renderGuestbook(data.guestbook || []);
-      
-      // Kích hoạt tab mặc định
       switchTab('all');
+      
       document.getElementById('loading').style.display = 'none';
       document.getElementById('album').classList.add('visible');
     } catch(e) {
@@ -241,7 +249,8 @@
     const img = filteredImages[idx];
     const mainImg = document.getElementById('main-img');
 
-    const displayUrl = img.thumbnailLink.replace(/=s\d+$/, '=s1600');
+    // FIX LỖI TĂNG KÍCH THƯỚC ẢNH CHẤT LƯỢNG CAO SẮC NÉT KHÔNG BỊ CHẶN 403
+    const displayUrl = img.thumbnailLink.replace('=s220', '=s1600');
     mainImg.classList.add('loading');
     mainImg.src = displayUrl;
     mainImg.onload = () => mainImg.classList.remove('loading');
@@ -251,12 +260,16 @@
     document.getElementById('img-counter').textContent = `${idx + 1} / ${filteredImages.length}`;
     document.getElementById('like-count').textContent = img.likes || 0;
 
-    // Hiển thị danh sách thành viên (Tags)
     renderTags(img);
 
     document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
     const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+
+    // Đồng bộ số thứ tự ảnh đang xem lên URL trình duyệt (?i=...)
+    const p = new URLSearchParams(location.search);
+    p.set('i', idx);
+    history.replaceState({}, '', '?' + p.toString());
   }
 
   function clearViewer() {
@@ -267,21 +280,18 @@
     document.getElementById('thumb-strip').innerHTML = '<p style="padding:1rem;color:var(--muted)">Chưa có khoảnh khắc nổi bật nào được thả tim.</p>';
   }
 
-  // Chức năng Thả Tim 
   async function likePhoto() {
     if(filteredImages.length === 0) return;
     const img = filteredImages[current];
     img.likes = (img.likes || 0) + 1;
     document.getElementById('like-count').textContent = img.likes;
     
-    // Đồng bộ lên Google Sheets ẩn
     fetch(APPS_SCRIPT_URL, {
       method: "POST",
       body: JSON.stringify({ action: "like", id: img.id })
     });
   }
 
-  // Quản lý gắn thẻ thành viên các con
   function renderTags(img) {
     const container = document.getElementById('tags-container');
     container.innerHTML = '';
@@ -304,20 +314,21 @@
   async function addTagName(img) {
     const name = prompt("Nhập tên học sinh có mặt trong bức hình này:");
     if(!name) return;
+    const cleanName = name.trim();
+    if(!cleanName) return;
+    
     if(!img.tags) img.tags = [];
-    if(!img.tags.includes(name)) {
-      img.tags.push(name);
+    if(!img.tags.includes(cleanName)) {
+      img.tags.push(cleanName);
       renderTags(img);
       
-      // Lưu vào Google Sheets
       fetch(APPS_SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "tag", id: img.id, tagName: name })
+        body: JSON.stringify({ action: "tag", id: img.id, tagName: cleanName })
       });
     }
   }
 
-  // Chức năng Trình Chiếu Slideshow tự động
   function toggleSlideshow() {
     const btn = document.getElementById('ss-btn');
     if (slideshowInterval) {
@@ -328,11 +339,10 @@
       btn.textContent = '⏸️ Dừng trình chiếu';
       slideshowInterval = setInterval(() => {
         if(filteredImages.length) showImage((current + 1) % filteredImages.length);
-      }, 3500); // Tự chuyển ảnh sau mỗi 3.5 giây
+      }, 3500); 
     }
   }
 
-  // Bật/Tắt nhạc nền
   function toggleMusic() {
     const music = document.getElementById('bg-music');
     const btn = document.getElementById('music-btn');
@@ -340,13 +350,12 @@
       music.pause();
       btn.textContent = '🎵 Bật nhạc';
     } else {
-      music.play().catch(() => alert("Hãy tương tác với trang để kích hoạt trình phát nhạc!"));
+      music.play().catch(() => alert("Hãy bấm chuột hoặc click vào trang web để cho phép trình duyệt phát nhạc nhé!"));
       btn.textContent = '🔇 Tắt nhạc';
     }
     isMusicPlaying = !isMusicPlaying;
   }
 
-  // Quản lý Lưu Bút lớp học
   function renderGuestbook(list) {
     const container = document.getElementById('gb-container');
     container.innerHTML = list.length === 0 ? '<p style="color:var(--muted); font-size:14px;">Chưa có lời chúc nào, hãy để lại lời chúc đầu tiên!</p>' : '';
@@ -364,13 +373,19 @@
     const name = nameInput.value.trim();
     const message = msgInput.value.trim();
 
-    if(!name || !message) { alert("Vui lòng điền tên và lời nhắn."); return; }
+    if(!name || !message) { alert("Vui lòng điền tên và lời nhắn Lưu bút."); return; }
 
     const container = document.getElementById('gb-container');
     const div = document.createElement('div');
     div.className = 'gb-item';
     div.innerHTML = `<div class="gb-meta">${name}:</div><div class="gb-msg">${message}</div>`;
-    container.insertBefore(div, container.firstChild);
+    
+    if(container.firstChild && container.firstChild.tagName === "DIV") {
+      container.insertBefore(div, container.firstChild);
+    } else {
+      container.innerHTML = '';
+      container.appendChild(div);
+    }
 
     nameInput.value = ''; msgInput.value = '';
 
@@ -384,6 +399,27 @@
   function nextImg() { if (filteredImages.length) showImage((current + 1) % filteredImages.length); }
   function openLightbox() { document.getElementById('lightbox').classList.add('open'); }
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
+  // Các nút bấm mũi tên bàn phím máy tính
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('lightbox').classList.contains('open')) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prevImg();
+      if (e.key === 'ArrowRight') nextImg();
+      return;
+    }
+    if (e.key === 'ArrowLeft') prevImg();
+    if (e.key === 'ArrowRight') nextImg();
+  });
+
+  // Vuốt màn hình điện thoại di động
+  let touchStartX = 0;
+  const viewer = document.getElementById('viewer-area');
+  viewer && viewer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  viewer && viewer.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) dx < 0 ? nextImg() : prevImg();
+  }, { passive: true });
 </script>
 </body>
 </html>
