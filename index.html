@@ -9,49 +9,99 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0d0d0d; --surface: #161616; --border: rgba(255,255,255,0.08);
-    --text: #e8e4dd; --muted: rgba(232,228,221,0.45); --accent: #c9a96e; --thumb-size: 88px;
+    --text: #e8e4dd; --muted: rgba(232,228,221,0.45); --accent: #c9a96e; --thumb-size: 80px;
   }
-  body { background: var(--bg); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+  body { background: var(--bg); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; overflow: hidden; }
+  
   #album { display: none; flex-direction: column; height: 100vh; }
   #album.visible { display: flex; }
-  .album-header { padding: 1.2rem 2rem; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  
+  .album-header { padding: 1rem 2rem; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
   .album-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; letter-spacing: 0.06em; }
   .album-count { font-size: 13px; color: var(--muted); }
-  .viewer-area { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 1rem; overflow: hidden; }
+
+  /* BỐ CỤC CHÍNH 2 CỘT */
+  .main-container { flex: 1; display: flex; min-height: 0; overflow: hidden; }
+  
+  /* CỘT TRÁI: LỜI CHÚC */
+  .wishes-column { width: 320px; border-right: 0.5px solid var(--border); background: #111; display: flex; flex-direction: column; padding: 1.5rem; gap: 1.5rem; }
+  .wishes-column h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--accent); font-weight: 400; }
+  
+  /* Form gửi lời chúc */
+  .wish-form { display: flex; flex-direction: column; gap: 8px; background: var(--surface); padding: 12px; border-radius: 8px; border: 0.5px solid var(--border); }
+  .wish-form input, .wish-form textarea { background: #222; border: 0.5px solid var(--border); color: var(--text); padding: 8px 12px; font-family: inherit; font-size: 13px; border-radius: 4px; outline: none; }
+  .wish-form textarea { resize: none; height: 60px; }
+  .wish-form input:focus, .wish-form textarea:focus { border-color: var(--accent); }
+  .wish-form button { background: var(--accent); color: #0d0d0d; border: none; padding: 8px; border-radius: 4px; font-weight: 500; cursor: pointer; font-size: 13px; transition: opacity 0.2s; }
+  .wish-form button:hover { opacity: 0.9; }
+
+  /* Khung chạy lời chúc tự động mượt mà */
+  .wishes-ticker-container { flex: 1; overflow: hidden; position: relative; border: 0.5px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.2); }
+  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 12px; animation: ticker 25s linear infinite; }
+  .wishes-ticker:hover { animation-play-state: paused; }
+  @keyframes ticker { 0% { top: 100%; transform: translateY(0); } 100% { top: 0%; transform: translateY(-100%); } }
+  
+  .wish-card { background: var(--surface); padding: 12px; border-radius: 6px; border-left: 2px solid var(--accent); }
+  .wish-name { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
+  .wish-text { font-size: 13px; color: #ccc; line-height: 1.4; }
+
+  /* CỘT PHẢI: HIỂN THỊ ẢNH CHÍNH */
+  .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1rem; overflow: hidden; background: #080808; }
   .main-img-wrap { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
   #main-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; transition: opacity 0.25s ease; cursor: zoom-in; display: block; }
   #main-img.loading { opacity: 0; }
+  
   .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 10; backdrop-filter: blur(8px); }
   .nav-btn:hover { background: rgba(201,169,110,0.15); border-color: var(--accent); }
-  .nav-btn.prev { left: 0.5rem; } .nav-btn.next { right: 0.5rem; }
-  .dl-btn { position: absolute; top: 0.5rem; right: 0.5rem; padding: 6px 14px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 20px; color: var(--text); font-size: 12px; cursor: pointer; text-decoration: none; backdrop-filter: blur(8px); }
+  .nav-btn.prev { left: 1rem; } .nav-btn.next { right: 1rem; }
+  
+  /* Nhóm nút tương tác góc trên */
+  .action-group { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 8px; z-index: 10; }
+  .dl-btn, .like-btn { padding: 8px 16px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 20px; color: var(--text); font-size: 12px; cursor: pointer; text-decoration: none; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
   .dl-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .img-counter { position: absolute; bottom: 0.5rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); background: rgba(13,13,13,0.6); padding: 4px 12px; border-radius: 20px; pointer-events: none; }
-  #lightbox { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
-  #lightbox.open { display: flex; } #lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; }
-  .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 36px; height: 36px; background: rgba(255,255,255,0.08); border: none; border-radius: 50%; color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .like-btn:hover { border-color: #ff4757; color: #ff4757; }
+  .like-btn.liked { background: #ff4757; color: #fff; border-color: #ff4757; }
+
+  .img-counter { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); background: rgba(13,13,13,0.6); padding: 4px 12px; border-radius: 20px; pointer-events: none; }
+  
+  /* STRIP THUMBNAILS */
   .thumb-strip { flex-shrink: 0; padding: 0.75rem 1rem; border-top: 0.5px solid var(--border); background: var(--surface); overflow-x: auto; display: flex; gap: 8px; align-items: center; scroll-behavior: smooth; }
-  .thumb { flex-shrink: 0; width: var(--thumb-size); height: var(--thumb-size); border-radius: 6px; object-fit: cover; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s; opacity: 0.5; }
-  .thumb.active { border-color: var(--accent); opacity: 1; transform: translateY(-3px); }
+  .thumb { flex-shrink: 0; width: var(--thumb-size); height: var(--thumb-size); border-radius: 6px; object-fit: cover; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s; opacity: 0.4; }
+  .thumb.active { border-color: var(--accent); opacity: 1; transform: translateY(-2px); }
+  
+  /* KHUNG LOADING & LỖI */
   #loading { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
   #loading.hidden { display: none; }
   .spinner { width: 36px; height: 36px; border: 1.5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   #error-msg { display: none; position: fixed; inset: 0; z-index: 300; background: var(--bg); align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; }
   #error-msg.show { display: flex; }
-  @media (max-width: 600px) { :root { --thumb-size: 70px; } .nav-btn { width: 36px; height: 36px; } }
+
+  /* LIGHTBOX */
+  #lightbox { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lightbox.open { display: flex; } #lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; }
+  .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 36px; height: 36px; background: rgba(255,255,255,0.08); border: none; border-radius: 50%; color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+  /* RESPONSIVE TRÊN ĐIỆN THOẠI */
+  @media (max-width: 768px) {
+    .main-container { flex-direction: column-reverse; }
+    .wishes-column { width: 100%; height: 220px; padding: 1rem; border-right: none; border-top: 0.5px solid var(--border); }
+    .wishes-ticker-container { height: 90px; }
+    :root { --thumb-size: 65px; }
+    .nav-btn { width: 36px; height: 36px; }
+  }
 </style>
 </head>
 <body>
 
 <div id="loading">
   <div class="spinner"></div>
-  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.1em;">ĐANG TẢI ALBUM ẢNH LỚP...</p>
+  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.1em;">ĐANG TẢI ALBUM & LỜI CHÚC MIRA A3...</p>
 </div>
 
 <div id="error-msg">
-  <h2 style="font-family: 'Cormorant Garamond', serif; font-weight:300;">Không thể tải ảnh</h2>
-  <p id="error-detail" style="color: var(--muted); font-size: 14px;">Vui lòng kiểm tra cấu hình Backend Apps Script.</p>
+  <h2 style="font-family: 'Cormorant Garamond', serif; font-weight:300;">Không thể tải dữ liệu</h2>
+  <p id="error-detail" style="color: var(--muted); font-size: 14px;">Vui lòng cấu hình Web App Apps Script.</p>
 </div>
 
 <div id="album">
@@ -60,14 +110,37 @@
     <span class="album-count" id="album-count">0 ảnh</span>
   </div>
 
-  <div class="viewer-area" id="viewer-area">
-    <button class="nav-btn prev" onclick="prevImg()">&#8592;</button>
-    <div class="main-img-wrap" style="width:100%; height:100%">
-      <img id="main-img" src="" alt="Ảnh chính" onclick="openLightbox()" />
+  <div class="main-container">
+    <!-- CỘT TRÁI: GỬI LỜI CHÚC & CHẠY CHỮ -->
+    <div class="wishes-column">
+      <h3>Lời Chúc Lớp Mình</h3>
+      <form class="wish-form" id="wish-form" onsubmit="sendWish(event)">
+        <input type="text" id="wish-name" placeholder="Tên của bạn..." required>
+        <textarea id="wish-msg" placeholder="Viết lời chúc tại đây..." required></textarea>
+        <button type="submit" id="wish-submit">Gửi Lời Chúc ✨</button>
+      </form>
+      <div class="wishes-ticker-container">
+        <div class="wishes-ticker" id="wishes-ticker">
+          <!-- Lời chúc tự động render ở đây -->
+        </div>
+      </div>
     </div>
-    <button class="nav-btn next" onclick="nextImg()">&#8594;</button>
-    <a id="dl-btn" class="dl-btn" target="_blank" rel="noopener">↓ Tải Ảnh Gốc</a>
-    <div class="img-counter" id="img-counter"></div>
+
+    <!-- CỘT PHẢI: KHU VỰC XEM ẢNH -->
+    <div class="viewer-area" id="viewer-area">
+      <button class="nav-btn prev" onclick="prevImg()">&#8592;</button>
+      <div class="main-img-wrap" style="width:100%; height:100%">
+        <img id="main-img" src="" alt="Ảnh chính" onclick="openLightbox()" />
+      </div>
+      <button class="nav-btn next" onclick="nextImg()">&#8594;</button>
+      
+      <div class="action-group">
+        <button class="like-btn" id="like-btn" onclick="likeImage()">❤️ Thả Tim (<span id="like-count">0</span>)</button>
+        <a id="dl-btn" class="dl-btn" target="_blank" rel="noopener">↓ Tải Ảnh Gốc</a>
+      </div>
+      
+      <div class="img-counter" id="img-counter"></div>
+    </div>
   </div>
 
   <div class="thumb-strip" id="thumb-strip"></div>
@@ -79,8 +152,8 @@
 </div>
 
 <script>
-  // 🔴 THAY ĐƯỜNG LINK WEB APP APPS SCRIPT CỦA BẠN VÀO ĐÂY ĐỂ CHẠY
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZwuIYWh0HWLPhJVL63UvjlLtopC5rUjXujQ8Q5PIfipXcrV24Tj21U3ifeEb4b20AqA/exec";
+  // 🔴 THAY ĐƯỜNG LINK WEB APP APPS SCRIPT MỚI CỦA BẠN VÀO ĐÂY
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP8nGx0GgnOCxpGCMNI5tJeBgOzX3rahtxOGy0Dr3VjW70ZsrVtzRE1i8BQBScZfdAZw/exec";
 
   let images = [];
   let current = 0;
@@ -89,27 +162,26 @@
     if(APPS_SCRIPT_URL.includes("DÁN_LINK")) {
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('error-msg').classList.add('show');
-      document.getElementById('error-detail').textContent = "Bạn chưa cấu hình link APPS_SCRIPT_URL ở cuối file html.";
+      document.getElementById('error-detail').textContent = "Bạn chưa cấu hình link APPS_SCRIPT_URL mới ở cuối file.";
       return;
     }
-    loadAlbum();
+    loadAlbumData();
   };
 
-  async function loadAlbum() {
+  async function loadAlbumData() {
     try {
-      const res = await fetch(APPS_SCRIPT_URL);
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getData`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      if (!data.files || data.files.length === 0) throw new Error('Thư mục trống hoặc không tìm thấy hình ảnh.');
 
-      images = data.files;
+      images = data.files || [];
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('album').classList.add('visible');
       document.getElementById('album-count').textContent = images.length + ' ảnh';
 
       buildThumbs();
+      renderWishes(data.wishes || []);
       
-      // Lấy ảnh hiển thị theo tham số i trên URL nếu có
       const p = new URLSearchParams(location.search);
       const startIdx = parseInt(p.get('i') || '0');
       showImage(Math.min(startIdx, images.length - 1));
@@ -118,6 +190,21 @@
       document.getElementById('error-msg').classList.add('show');
       document.getElementById('error-detail').textContent = e.message;
     }
+  }
+
+  function renderWishes(wishes) {
+    const ticker = document.getElementById('wishes-ticker');
+    ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text">Chưa có lời chúc nào. Hãy là người đầu tiên!</p></div>' : '';
+    
+    // Nhân bản lời chúc nếu quá ít để tạo vòng lặp liên tục mượt mà
+    const list = wishes.length > 0 && wishes.length < 5 ? [...wishes, ...wishes, ...wishes] : wishes;
+    
+    list.forEach(w => {
+      const card = document.createElement('div');
+      card.className = 'wish-card';
+      card.innerHTML = `<div class="wish-name">✍️ ${escapeHtml(w.name)}</div><div class="wish-text">${escapeHtml(w.message)}</div>`;
+      ticker.appendChild(card);
+    });
   }
 
   function buildThumbs() {
@@ -136,11 +223,10 @@
   }
 
   function showImage(idx) {
+    if(!images.length) return;
     current = idx;
     const img = images[idx];
     const mainImg = document.getElementById('main-img');
-
-    // Tự động chuyển đổi kích thước ảnh chất lượng cao mượt mà không bị lỗi 403 nhúng ảnh của Google
     const displayUrl = img.thumbnailLink.replace(/=s\d+$/, '=s1600');
 
     mainImg.classList.add('loading');
@@ -150,6 +236,11 @@
     document.getElementById('lightbox-img').src = displayUrl;
     document.getElementById('dl-btn').href = img.webContentLink;
     document.getElementById('img-counter').textContent = `${idx + 1} / ${images.length}`;
+    document.getElementById('like-count').textContent = img.likes || 0;
+
+    // Reset trạng thái nút tim dựa trên LocalStorage cá nhân
+    const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
+    document.getElementById('like-btn').classList.toggle('liked', likedList.includes(img.id));
 
     document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
     const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
@@ -160,11 +251,80 @@
     history.replaceState({}, '', '?' + p.toString());
   }
 
+  // TÍNH NĂNG THẢ TIM
+  async function likeImage() {
+    if (!images.length) return;
+    const img = images[current];
+    const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
+    
+    if (likedList.includes(img.id)) {
+      alert("Bạn đã thả tim ảnh này rồi!");
+      return;
+    }
+
+    // Tăng số hiển thị ngay lập tức (UI thực tế trước)
+    img.likes = (img.likes || 0) + 1;
+    document.getElementById('like-count').textContent = img.likes;
+    document.getElementById('like-btn').classList.add('liked');
+    
+    likedList.push(img.id);
+    localStorage.setItem('mira_liked', JSON.stringify(likedList));
+
+    // Đồng bộ gửi lên Google Sheet âm thầm ở background
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'like', imageId: img.id })
+    });
+  }
+
+  // TÍNH NĂNG GỬI LỜI CHÚC
+  async function sendWish(e) {
+    e.preventDefault();
+    const nameInput = document.getElementById('wish-name');
+    const msgInput = document.getElementById('wish-msg');
+    const btn = document.getElementById('wish-submit');
+    
+    const name = nameInput.value.trim();
+    const message = msgInput.value.trim();
+    if(!name || !message) return;
+
+    btn.disabled = true;
+    btn.textContent = "Đang gửi... ⌛";
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'addWish', name: name, message: message })
+      });
+
+      // Tạo ngay card ảo trên giao diện để xem luôn không cần đợi load lại trang
+      const ticker = document.getElementById('wishes-ticker');
+      const card = document.createElement('div');
+      card.className = 'wish-card';
+      card.innerHTML = `<div class="wish-name">✍️ ${escapeHtml(name)}</div><div class="wish-text">${escapeHtml(message)}</div>`;
+      ticker.insertBefore(card, ticker.firstChild);
+
+      msgInput.value = '';
+      alert("Gửi lời chúc thành công! Cảm ơn bạn rất nhiều. ❤️");
+    } catch (err) {
+      alert("Có lỗi xảy ra khi gửi, vui lòng thử lại.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Gửi Lời Chúc ✨";
+    }
+  }
+
   function prevImg() { if (images.length) showImage((current - 1 + images.length) % images.length); }
   function nextImg() { if (images.length) showImage((current + 1) % images.length); }
   function openLightbox() { document.getElementById('lightbox').classList.add('open'); }
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+  function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
+  // Sự kiện bàn phím & Vuốt (Giữ nguyên từ mã cũ của bạn)
   document.addEventListener('keydown', e => {
     if (document.getElementById('lightbox').classList.contains('open')) {
       if (e.key === 'Escape') closeLightbox();
