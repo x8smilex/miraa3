@@ -81,7 +81,7 @@
   .tabs-container { display: flex; gap: 10px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); }
   .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 16px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; }
   .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-  .tab-btn.active { color: var(--accent); background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.2); font-weight: 500; }
+  .tab-btn.active { color: var(--accent); background: rgba(201, 169, 110, 0.08); border-color: rgba(201,169,110,0.2); font-weight: 500; }
 
   .slider-main-row { display: flex; align-items: center; padding: 0 10px; width: 100%; }
   .thumb-nav-btn { background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: var(--text); width: 36px; height: 75px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.3s; z-index: 5; }
@@ -204,6 +204,7 @@
 </div>
 
 <script>
+  // 🔴 DÁN ĐƯỜNG LINK WEB APP APPS SCRIPT CHUẨN CỦA BẠN VÀO ĐÂY:
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0l3Qfd7iE5ObDW6UeU0G_zQiFdAikkFlyECNfXeL5ITHqBj3aSBEwC6aeaSFKfQ9MRw/exec";
 
   let masterImages = []; 
@@ -341,7 +342,6 @@
     mainVideo.pause();
     mainVideo.src = "";
 
-    // NHẬN DIỆN VIDEO KÉP THÔNG MINH (BẰNG CẢ API VÀ ĐUÔI TÊN FILE)
     const fileName = (item.name || "").toLowerCase();
     const isVideoFile = item.isVideo || 
                         fileName.endsWith('.mp4') || 
@@ -417,7 +417,9 @@
     if (slideshowInterval) {
       stopSlideshow();
     } else {
-      if (images[current] && (images[current].isVideo || (images[current].name || "").toLowerCase().endsWith('.mp4') || (images[current].name || "").toLowerCase().endsWith('.mov'))) {
+      const fileName = (images[current] ? images[current].name || "" : "").toLowerCase();
+      const isVideo = images[current] && (images[current].isVideo || fileName.endsWith('.mp4') || fileName.endsWith('.mov'));
+      if (isVideo) {
         alert("Không thể bật Tự động chạy khi đang xem Video.");
         return;
       }
