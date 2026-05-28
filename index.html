@@ -38,27 +38,21 @@
   /* BỐ CỤC CHÍNH 2 CỘT */
   .main-container { flex: 1; display: flex; min-height: 0; overflow: hidden; }
   
-  /* CỘT TRÁI: LỜI CHÚC */
-  .wishes-column { width: 340px; border-right: 1px solid var(--border); background: #0f0f0f; display: flex; flex-direction: column; padding: 1.5rem; gap: 1.5rem; }
-  .wishes-column h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--accent); font-weight: 400; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+  /* CỘT TRÁI NÂNG CẤP: DANH SÁCH THÀNH VIÊN AVATAR TRÒN */
+  .wishes-column { width: 320px; border-right: 1px solid var(--border); background: #0f0f0f; display: flex; flex-direction: column; padding: 1.2rem; gap: 1.2rem; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .wishes-column h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--accent); font-weight: 400; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-top: 5px; }
   
-  .wish-form { display: flex; flex-direction: column; gap: 10px; background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-  .wish-form input, .wish-form textarea { background: #1a1a1a; border: 1px solid var(--border); color: var(--text); padding: 10px 14px; font-family: inherit; font-size: 13px; border-radius: 6px; outline: none; transition: all 0.3s; }
-  .wish-form textarea { resize: none; height: 65px; line-height: 1.4; }
-  .wish-form input:focus, .wish-form textarea:focus { border-color: var(--accent); background: #222; box-shadow: 0 0 8px rgba(201,169,110,0.15); }
+  .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 5px 0; }
+  .avatar-item { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: transform 0.2s; user-select: none; }
+  .avatar-item:hover { transform: scale(1.08); }
   
-  .wish-form button { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #0d0d0d; border: none; padding: 10px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .wish-form button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); opacity: 0.95; }
-
-  .wishes-ticker-container { flex: 1; overflow: hidden; position: relative; border: 1px solid var(--border); border-radius: 12px; background: rgba(0,0,0,0.4); }
-  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 15px; animation: ticker 25s linear infinite; }
-  .wishes-ticker:hover { animation-play-state: paused; }
-  @keyframes ticker { 0% { top: 100%; transform: translateY(0); } 100% { top: 0%; transform: translateY(-100%); } }
+  .avatar-circle { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: all 0.3s; position: relative; }
+  .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-circle .avatar-initial { font-size: 14px; color: var(--accent); font-weight: 500; }
   
-  .wish-card { background: var(--surface); padding: 14px; border-radius: 8px; border: 1px solid var(--border); border-left: 3px solid var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-  .wish-name { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
-  .wish-text { font-size: 13px; color: #d1cdc7; line-height: 1.5; }
-
+  .avatar-item:hover .avatar-circle { border-color: var(--accent); box-shadow: 0 0 10px rgba(201,169,110,0.3); }
+  .avatar-name { font-size: 11px; color: #d1cdc7; margin-top: 4px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
+  
   /* CỘT PHẢI: KHU VỰC HIỂN THỊ CHÍNH */
   .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1.5rem; overflow: hidden; background: #050505; }
   .main-img-wrap { position: relative; width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border-radius: 8px; }
@@ -77,7 +71,6 @@
   /* THANH TỔNG HỢP: SLIDER KHUNG THUMBNAIL */
   .thumb-slider-wrapper { flex-shrink: 0; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--border); }
   
-  /* CẤU HÌNH GIAO DIỆN THANH TAB */
   .tabs-container { display: flex; gap: 8px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); overflow-x: auto; scrollbar-width: none; }
   .tabs-container::-webkit-scrollbar { display: none; }
   .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 14px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; white-space: nowrap; }
@@ -123,8 +116,8 @@
     .action-group { width: 100%; justify-content: space-between; }
     .btn-ui { padding: 6px 12px; font-size: 11px; flex: 1; justify-content: center; }
     .main-container { flex-direction: column-reverse; }
-    .wishes-column { width: 100%; height: 240px; padding: 1rem; border-right: none; border-top: 1px solid var(--border); }
-    .wishes-ticker-container { height: 100px; }
+    .wishes-column { width: 100%; height: 320px; padding: 1rem; border-right: none; border-top: 1px solid var(--border); }
+    .avatar-grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
     .tabs-container { padding: 8px 10px 0 10px; gap: 5px; }
     .tab-btn { font-size: 10px; padding: 4px 12px; }
     .img-counter { top: 1rem; bottom: auto; }
@@ -149,7 +142,7 @@
 <div id="album">
   <div class="album-header">
     <div class="album-title-wrap">
-      <span class="album-title">KỶ NIỆM CUỐI NĂM - MIRA A3</span>
+      <span class="album-title">MIRA A3 - VINSCHOOL ROYAL CITY R1</span>
       <span class="album-count" id="album-count">0 tệp</span>
     </div>
     
@@ -162,15 +155,11 @@
 
   <div class="main-container">
     <div class="wishes-column">
-      <h3><i class="fa-regular fa-comments"></i> Lời Chúc Lớp Mình</h3>
-      <form class="wish-form" id="wish-form" onsubmit="sendWish(event)">
-        <input type="text" id="wish-name" placeholder="Tên của bạn..." required>
-        <textarea id="wish-msg" placeholder="Viết lời chúc lưu niệm tại đây..." required></textarea>
-        <button type="submit" id="wish-submit"><i class="fa-regular fa-paper-plane"></i> Gửi Lời Chúc ✨</button>
-      </form>
-      <div class="wishes-ticker-container">
-        <div class="wishes-ticker" id="wishes-ticker"></div>
-      </div>
+      <h3><i class="fa-solid fa-chalkboard-user"></i> Ban Giám Hiệu & GV</h3>
+      <div class="avatar-grid" id="teachers-grid"></div>
+
+      <h3><i class="fa-solid fa-graduation-cap"></i> Thành Viên Lớp (23)</h3>
+      <div class="avatar-grid" id="students-grid"></div>
     </div>
 
     <div class="viewer-area" id="viewer-area">
@@ -211,6 +200,25 @@
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1JoIYMhXRxZB60HyIqSrnCzk54F0-ORbVrDSjRetoru6eW0FhmXyWswdIVpb7223l/exec";
 
+  // 📝 DANH SÁCH 5 GIÁO VIÊN (Bạn có thể điền link ảnh thật vào dấu nháy của 'img')
+  const TEACHERS = [
+    { name: "Cô Chủ Nhiệm", img: "" },
+    { name: "Thầy Hiệu Trưởng", img: "" },
+    { name: "Cô Phó Hiệu Trưởng", img: "" },
+    { name: "Thầy Giám Thị", img: "" },
+    { name: "Cô Tiếng Anh", img: "" }
+  ];
+
+  // 📝 DANH SÁCH 23 HỌC SINH (Hãy đổi tên chuẩn theo lớp để hệ thống tự lọc ảnh)
+  const STUDENTS = [
+    { name: "An", img: "" }, { name: "Bảo", img: "" }, { name: "Cường", img: "" }, { name: "Dũng", img: "" },
+    { name: "Đạt", img: "" }, { name: "Hà", img: "" }, { name: "Hải", img: "" }, { name: "Hoàng", img: "" },
+    { name: "Hùng", img: "" }, { name: "Khánh", img: "" }, { name: "Linh", img: "" }, { name: "Long", img: "" },
+    { name: "Minh", img: "" }, { name: "Nam", img: "" }, { name: "Nga", img: "" }, { name: "Phong", img: "" },
+    { name: "Phúc", img: "" }, { name: "Quân", img: "" }, { name: "Sơn", img: "" }, { name: "Tâm", img: "" },
+    { name: "Tuấn", img: "" }, { name: "Vinh", img: "" }, { name: "Yến", img: "" }
+  ];
+
   let masterImages = []; 
   let images = [];       
   let current = 0;
@@ -220,8 +228,79 @@
   const SLIDESHOW_SPEED = 3000; 
 
   window.onload = () => {
+    renderClassDirectory();
     loadAlbumData();
   };
+
+  // HÀM TỰ ĐỘNG DỰNG AVATAR HÌNH TRÒN LÊN CỘT TRÁI
+  function renderClassDirectory() {
+    const tGrid = document.getElementById('teachers-grid');
+    const sGrid = document.getElementById('students-grid');
+    
+    tGrid.innerHTML = ''; sGrid.innerHTML = '';
+
+    TEACHERS.forEach(t => tGrid.appendChild(createAvatarElement(t, true)));
+    STUDENTS.forEach(s => sGrid.appendChild(createAvatarElement(s, false)));
+  }
+
+  function createAvatarElement(person, isTeacher) {
+    const item = document.createElement('div');
+    item.className = 'avatar-item';
+    // Bấm vào avatar tròn sẽ kích hoạt tìm kiếm ảnh của người đó
+    item.onclick = () => filterByPerson(person.name);
+
+    const circle = document.createElement('div');
+    circle.className = 'avatar-circle';
+    if(isTeacher) circle.style.borderColor = 'rgba(201,169,110,0.4)';
+
+    if (person.img) {
+      const img = document.createElement('img');
+      img.src = person.img;
+      img.alt = person.name;
+      circle.appendChild(img);
+    } else {
+      const initial = document.createElement('span');
+      initial.className = 'avatar-initial';
+      initial.textContent = person.name.charAt(0).toUpperCase();
+      if(isTeacher) initial.style.color = '#fff';
+      circle.appendChild(initial);
+    }
+
+    const name = document.createElement('span');
+    name.className = 'avatar-name';
+    name.textContent = person.name;
+
+    item.appendChild(circle);
+    item.appendChild(name);
+    return item;
+  }
+
+  // TÍNH NĂNG TƯƠNG TÁC: BẤM AVATAR LỌC ẢNH THEO TÊN FILE TRÊN DRIVE
+  function filterByPerson(name) {
+    stopSlideshow();
+    // Bỏ kích hoạt màu tất cả các tab dưới
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    currentTab = 'filter';
+
+    const searchKey = name.toLowerCase();
+    images = masterImages.filter(img => (img.name || "").toLowerCase().includes(searchKey));
+
+    const textEl = document.getElementById('album-count');
+    textEl.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Khoảnh khắc của: <b>${name}</b> (${images.length})`;
+    
+    buildThumbs();
+
+    if (images.length > 0) {
+      showImage(0);
+    } else {
+      document.getElementById('main-img').classList.remove('visible');
+      document.getElementById('main-video').classList.remove('visible');
+      document.getElementById('main-iframe').classList.remove('visible');
+      document.getElementById('main-iframe').src = "";
+      document.getElementById('thumb-strip').innerHTML = `<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-solid fa-face-frown"></i> Chưa có ảnh nào đặt tên theo từ khóa "${name}".</div>`;
+      document.getElementById('img-counter').textContent = "0 / 0";
+    }
+  }
 
   function loadAlbumData() {
     const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
@@ -245,11 +324,6 @@
       updateFileCountText();
 
       buildThumbs();
-      renderWishes(data.wishes || []);
-      
-      const p = new URLSearchParams(location.search);
-      const startIdx = parseInt(p.get('i') || '0');
-      showImage(Math.min(startIdx, images.length - 1));
     };
 
     const script = document.createElement('script');
@@ -257,24 +331,11 @@
     script.onerror = function() {
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('error-msg').classList.add('show');
-      document.getElementById('error-detail').textContent = "Lỗi kết nối mạng hoặc đường link Web App không hợp lệ.";
+      document.getElementById('error-detail').textContent = "Lỗi kết nối mạng hoặc link Web App không hợp lệ.";
     };
     document.body.appendChild(script);
   }
 
-  function renderWishes(wishes) {
-    const ticker = document.getElementById('wishes-ticker');
-    ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text"><i class="fa-solid fa-pen-fancy"></i> Hãy gửi lời chúc đầu tiên nhé!</p></div>' : '';
-    
-    wishes.forEach(w => {
-      const card = document.createElement('div');
-      card.className = 'wish-card';
-      card.innerHTML = `<div class="wish-name"><i class="fa-regular fa-user"></i> ${escapeHtml(w.name)}</div><div class="wish-text">${escapeHtml(w.message)}</div>`;
-      ticker.appendChild(card);
-    });
-  }
-
-  /* LOGIC PHÂN LOẠI TABS NÂNG CẤP THÊM BỘ LỌC TOP LIKED */
   function switchTab(tab) {
     if (currentTab === tab) return;
     currentTab = tab;
@@ -298,7 +359,6 @@
         return item.isVideo || name.endsWith('.mp4') || name.endsWith('.mov') || name.endsWith('.mkv') || name.endsWith('.avi');
       });
     } else if (tab === 'liked') {
-      // Lọc các file có lượt tim > 0 và xếp lượng tim giảm dần (Nhiều nhất lên đầu)
       images = masterImages
         .filter(item => (item.likes || 0) > 0)
         .sort((a, b) => (b.likes || 0) - (a.likes || 0));
@@ -316,7 +376,7 @@
       document.getElementById('main-iframe').src = "";
       
       let emptyMsg = '<i class="fa-regular fa-folder-open"></i> Mục này hiện đang trống.';
-      if(tab === 'liked') emptyMsg = '<i class="fa-regular fa-heart"></i> Chưa có ảnh/video nào được thả tim. Hãy là người đầu tiên!';
+      if(tab === 'liked') emptyMsg = '<i class="fa-regular fa-heart"></i> Chưa có ảnh/video nào được thả tim.';
       
       document.getElementById('thumb-strip').innerHTML = `<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;">${emptyMsg}</div>`;
       document.getElementById('img-counter').textContent = "0 / 0";
@@ -401,10 +461,8 @@
       mainImg.classList.remove('visible');
       mainVideo.classList.remove('visible'); 
       mainIframe.classList.add('visible');
-      
       mainIframe.src = "https://drive.google.com/file/d/" + item.id + "/preview";
       if (slideshowInterval) stopSlideshow();
-      
     } else {
       mainIframe.classList.remove('visible');
       mainVideo.classList.remove('visible');
@@ -437,12 +495,6 @@
     document.querySelectorAll('.thumb-item').forEach((t, i) => t.classList.toggle('active', i === idx));
     const activeThumb = document.querySelector(`.thumb-item[data-idx="${idx}"]`);
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-    if (currentTab === 'all') {
-      const p = new URLSearchParams(location.search);
-      p.set('i', idx);
-      history.replaceState({}, '', '?' + p.toString());
-    }
   }
 
   function toggleSlideshow() {
@@ -502,14 +554,12 @@
     
     buildThumbs();
 
-    // Nếu đang ở tab Liked, cập nhật và sắp xếp lại danh sách thời gian thực
     if (currentTab === 'liked') {
       images = masterImages
         .filter(item => (item.likes || 0) > 0)
         .sort((a, b) => (b.likes || 0) - (a.likes || 0));
       updateFileCountText();
       buildThumbs();
-      // Giữ tiêu điểm tại ảnh vừa like
       const newIdx = images.findIndex(item => item.id === img.id);
       if (newIdx !== -1) {
         current = newIdx;
@@ -524,41 +574,6 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'like', imageId: img.id })
     });
-  }
-
-  async function sendWish(e) {
-    e.preventDefault();
-    const nameInput = document.getElementById('wish-name');
-    const msgInput = document.getElementById('wish-msg');
-    const btn = document.getElementById('wish-submit');
-    const name = nameInput.value.trim();
-    const message = msgInput.value.trim();
-    if(!name || !message) return;
-
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Đang gửi...`;
-
-    try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'addWish', name: name, message: message })
-      });
-
-      const ticker = document.getElementById('wishes-ticker');
-      const card = document.createElement('div');
-      card.className = 'wish-card';
-      card.innerHTML = `<div class="wish-name"><i class="fa-regular fa-user"></i> ${escapeHtml(name)}</div><div class="wish-text">${escapeHtml(message)}</div>`;
-      ticker.insertBefore(card, ticker.firstChild);
-      msgInput.value = '';
-      alert("Gửi lời chúc thành công! Cảm ơn bạn rất nhiều. ❤️");
-    } catch (err) {
-      alert("Có lỗi xảy ra khi gửi, vui lòng thử lại.");
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = `<i class="fa-regular fa-paper-plane"></i> Gửi Lời Chúc ✨`;
-    }
   }
 
   function prevImg() { if (images.length) showImage((current - 1 + images.length) % images.length); }
