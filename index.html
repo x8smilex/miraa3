@@ -97,7 +97,6 @@
   
   .video-badge { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 0.5px solid rgba(255,255,255,0.2); z-index: 2; }
   
-  /* Huy hiệu hiện số tim đè lên ảnh nhỏ khi lọt vào top trending */
   .thumb-like-badge { position: absolute; top: -5px; left: 5px; background: var(--danger); color: #fff; font-size: 9px; font-weight: 500; padding: 1px 6px; border-radius: 10px; display: flex; align-items: center; gap: 3px; border: 0.5px solid rgba(255,255,255,0.2); z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.4); animation: popIn 0.3s ease; }
   @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
@@ -204,8 +203,8 @@
 </div>
 
 <script>
-  // 🔴 DÁN ĐƯỜNG LINK WEB APP APPS SCRIPT CHUẨN CỦA BẠN VÀO ĐÂY:
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuR2dlLzGOJVpRTABNycnlMRvC7cW6nKLN2eWdqaiGypEvOqnJZ_zNJcasJ1Hn3YNUeg/exec";
+  // 🔴 ĐIỀN ĐƯỜNG LINK WEB APP APPS SCRIPT CHUẨN CỦA BẠN VÀO ĐÂY:
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSBXoS6mwHAhu7J2HqtQZnSPhlFxhY0gbhHFmFrzMFkewbX24eP-tm5MJ7bcAMv1Nebg/exec";
 
   let masterImages = []; 
   let images = [];       
@@ -219,11 +218,20 @@
     loadAlbumData();
   };
 
-  async function loadAlbumData() {
-    try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=getData`, { method: 'GET', redirect: 'follow' });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
+  function loadAlbumData() {
+    // Tạo tên hàm callback ngẫu nhiên để hứng dữ liệu trả về từ Google vượt tường lửa CORS
+    const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+    
+    window[callbackName] = function(data) {
+      delete window[callbackName];
+      document.body.removeChild(script);
+
+      if (data.error) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error-msg').classList.add('show');
+        document.getElementById('error-detail').textContent = data.error;
+        return;
+      }
 
       masterImages = data.files || [];
       images = [...masterImages]; 
@@ -238,11 +246,17 @@
       const p = new URLSearchParams(location.search);
       const startIdx = parseInt(p.get('i') || '0');
       showImage(Math.min(startIdx, images.length - 1));
-    } catch (e) {
+    };
+
+    // Tạo thẻ script ngầm để load dữ liệu mượt mà không bị trình duyệt chặn CORS
+    const script = document.createElement('script');
+    script.src = `${APPS_SCRIPT_URL}?action=getData&callback=${callbackName}`;
+    script.onerror = function() {
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('error-msg').classList.add('show');
-      document.getElementById('error-detail').textContent = e.message;
-    }
+      document.getElementById('error-detail').textContent = "Lỗi kết nối mạng hoặc đường link Web App Apps Script không hợp lệ.";
+    };
+    document.body.appendChild(script);
   }
 
   function renderWishes(wishes) {
