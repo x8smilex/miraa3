@@ -59,7 +59,7 @@
   .wish-name { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
   .wish-text { font-size: 13px; color: #d1cdc7; line-height: 1.5; }
 
-  /* CỘT PHẢI: KHU VỰC ẢNH & VIDEO CHÍNH */
+  /* CỘT PHẢI: KHU VỰC HIỂN THỊ CHÍNH */
   .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1.5rem; overflow: hidden; background: #050505; }
   .main-img-wrap { position: relative; width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border-radius: 8px; }
   
@@ -77,7 +77,7 @@
   /* THANH TỔNG HỢP: SLIDER KHUNG THUMBNAIL */
   .thumb-slider-wrapper { flex-shrink: 0; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--border); }
   
-  /* CẤU HÌNH GIAO DIỆN THANH TAB */
+  /* CẤU HÌNH GIAO DIỆN THANH TAB MỚI */
   .tabs-container { display: flex; gap: 10px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); }
   .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 16px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; }
   .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
@@ -204,7 +204,7 @@
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-SMcpFxo-wyojXVXb4_HVSS6Q0ilRVcGSynjjvaCv2_7rCAqrlwNiHc_7Q0WF_fNU/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQQa3utFNSA66dg7l4FXYxpAsDA9mxtyNHk-m7eIAcwBBsN0u6S81ubew2JVcuz6QRxA/exec";
 
   let masterImages = []; 
   let images = [];       
@@ -279,6 +279,9 @@
     } else {
       document.getElementById('main-img').classList.remove('visible');
       document.getElementById('main-video').classList.remove('visible');
+      const iframe = document.getElementById('main-iframe');
+      if (iframe) iframe.style.display = 'none';
+      
       document.getElementById('thumb-strip').innerHTML = '<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-regular fa-heart"></i> Chưa có bức ảnh nào được thả tim. Hãy xem tab Tất cả và thả tim nhé!</div>';
       document.getElementById('img-counter').textContent = "0 / 0";
       document.getElementById('like-count').textContent = "0";
@@ -320,7 +323,6 @@
     });
   }
 
-  /* CHUYỂN TRANG DANH SÁCH ẢNH NHỎ */
   function scrollThumbstrip(direction) {
     const strip = document.getElementById('thumb-strip');
     const scrollAmount = strip.clientWidth * 0.8; 
@@ -334,20 +336,36 @@
     
     const mainImg = document.getElementById('main-img');
     const mainVideo = document.getElementById('main-video');
+    const iframe = document.getElementById('main-iframe');
     
     mainVideo.pause();
     mainVideo.src = "";
 
     if (item.isVideo) {
       mainImg.classList.remove('visible');
-      mainVideo.classList.add('visible');
+      mainVideo.classList.remove('visible'); 
       
-      // Đã sửa đổi định dạng kết nối trực tuyến stream thay vì download
-      mainVideo.src = "https://docs.google.com/get_video_info?docid=" + item.id + "&format=mp4";
+      let targetIframe = iframe;
+      if (!targetIframe) {
+        targetIframe = document.createElement('iframe');
+        targetIframe.id = 'main-iframe';
+        targetIframe.style.width = '100%';
+        targetIframe.style.height = '100%';
+        targetIframe.style.border = 'none';
+        targetIframe.style.borderRadius = '8px';
+        targetIframe.setAttribute('allow', 'autoplay; encrypted-media');
+        targetIframe.setAttribute('allowfullscreen', 'true');
+        document.querySelector('.main-img-wrap').appendChild(targetIframe);
+      }
+      targetIframe.style.display = 'block';
+      targetIframe.src = "https://drive.google.com/file/d/" + item.id + "/preview";
       
       if (slideshowInterval) stopSlideshow();
       
     } else {
+      const activeIframe = document.getElementById('main-iframe');
+      if (activeIframe) activeIframe.style.display = 'none';
+      
       mainVideo.classList.remove('visible');
       mainImg.classList.add('visible');
       
