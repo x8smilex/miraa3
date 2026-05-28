@@ -53,7 +53,7 @@
 
   /* Vùng chạy chữ lời chúc */
   .wishes-ticker-container { flex: 1; overflow: hidden; position: relative; border: 1px solid var(--border); border-radius: 12px; background: rgba(0,0,0,0.4); }
-  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 15px; animation: ticker 25s linear infinite; }
+  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 15px; animation: ticker 40s linear infinite; }
   .wishes-ticker:hover { animation-play-state: paused; }
   @keyframes ticker { 0% { top: 100%; transform: translateY(0); } 100% { top: 0%; transform: translateY(-100%); } }
   
@@ -209,12 +209,14 @@
     }
   }
 
+ // Tìm hàm này trong file HTML của bạn và thay đè bằng đoạn code sạch này:
   function renderWishes(wishes) {
     const ticker = document.getElementById('wishes-ticker');
     ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text"><i class="fa-solid fa-pen-fancy"></i> Hãy gửi lời chúc đầu tiên lưu giữ kỷ niệm lớp mình nhé!</p></div>' : '';
     
-    const list = wishes.length > 0 && wishes.length < 5 ? [...wishes, ...wishes, ...wishes] : wishes;
-    list.forEach(w => {
+    // ĐÃ LOẠI BỎ ĐOẠN NHÂN BẢN TRƯỚC ĐÂY
+    // Duyệt qua danh sách gốc và chỉ render mỗi lời chúc đúng 1 lần duy nhất
+    wishes.forEach(w => {
       const card = document.createElement('div');
       card.className = 'wish-card';
       card.innerHTML = `<div class="wish-name"><i class="fa-regular fa-user"></i> ${escapeHtml(w.name)}</div><div class="wish-text">${escapeHtml(w.message)}</div>`;
