@@ -342,11 +342,18 @@
     mainVideo.pause();
     mainVideo.src = "";
 
+    // TÌM ĐOẠN NÀY TRONG HÀM showImage(idx) VÀ THAY ĐÈ VÀO CỰC KỲ DỄ DÀNG:
     if (item.isVideo) {
+      // 🎥 ĐÂY LÀ VIDEO
       mainImg.classList.remove('visible');
       mainVideo.classList.add('visible');
-      mainVideo.src = item.webContentLink;
+      
+      // SỬA DÒNG NÀY: Chuyển đổi ID thành link stream video chuẩn mã mở của Google Drive
+      // Định dạng này ép trình duyệt phát trực tuyến (Stream) thay vì bắt tải về, sửa lỗi màn hình đen gạch chéo
+      mainVideo.src = "https://docs.google.com/get_video_info?docid=" + item.id + "&format=mp4";
+      
       if (slideshowInterval) stopSlideshow();
+      
     } else {
       mainVideo.classList.remove('visible');
       mainImg.classList.add('visible');
