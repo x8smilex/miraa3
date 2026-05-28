@@ -38,37 +38,75 @@
   /* BỐ CỤC CHÍNH 2 CỘT */
   .main-container { flex: 1; display: flex; min-height: 0; overflow: hidden; }
   
-  /* CỘT TRÁI TỐI GIẢN: LƯỚI AVATAR HÌNH TRÒN GLOW EFFECT */
+  /* CỘT TRÁI TỐI GIẢN */
   .wishes-column { width: 280px; border-right: 1px solid var(--border); background: #0f0f0f; display: flex; flex-direction: column; padding: 1.2rem; gap: 1.2rem; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
   .wishes-column h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--accent); font-weight: 400; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-top: 5px; }
   
   .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 5px 0; }
   
-  /* Cấu trúc avatar tròn tối giản */
+  /* 🌈 CẤU TRÚC AVATAR HIỆU ỨNG 7 SẮC CẦU VỒNG RGB GLOW */
   .avatar-circle { 
     width: 52px; 
     height: 52px; 
     border-radius: 50%; 
-    border: 2px solid var(--border); 
-    background: var(--surface); 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    overflow: hidden; 
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
     position: relative; 
+    cursor: pointer;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  .avatar-circle img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-  .avatar-circle .avatar-initial { font-size: 15px; color: var(--accent); font-weight: 500; }
-  
-  /* 🛠️ HIỆU ỨNG DI CHUỘT PHÁT SÁNG (GLOW EFFECT) KHI HOVER */
-  .avatar-circle:hover { 
-    border-color: var(--accent); 
-    transform: scale(1.12);
-    box-shadow: 0 0 15px var(--accent), inset 0 0 8px rgba(201,169,110,0.3);
+
+  /* Tạo vòng tròn màu gradient nền ẩn phía sau */
+  .avatar-circle::before {
+    content: '';
+    position: absolute;
+    inset: -2px; /* Kích thước viền phát sáng */
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 400%;
+    z-index: 1;
+    opacity: 0.2; /* Mặc định mờ mờ tinh tế */
+    transition: opacity 0.3s ease;
+    /* Hiệu ứng chuyển động dải màu mượt mà */
+    animation: rainbowShift 20s linear infinite;
+  }
+
+  /* Khung chứa ảnh thực tế đè lên trên dải màu nền */
+  .avatar-inner {
+    position: absolute;
+    inset: 1px; /* Tạo khoảng hở cực nhỏ để dải màu lọt qua làm viền */
+    border-radius: 50%;
+    background: var(--surface);
     z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+  .avatar-inner img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .avatar-inner .avatar-initial { font-size: 15px; color: var(--accent); font-weight: 500; }
+  
+  /* 🛠️ HIỆU ỨNG DI CHUỘT VÀO: 7 SẮC CẦU VỒNG RỰC SÁNG & BÙNG NỔ HÀO QUANG (GLOW) */
+  .avatar-circle:hover { 
+    transform: scale(1.15);
+    z-index: 5;
+  }
+  .avatar-circle:hover::before {
+    opacity: 1;
+    /* Đẩy ánh sáng neon tỏa ra ngoài dạng cầu vồng siêu đẹp */
+    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.6)) 
+            drop-shadow(0 0 20px rgba(0, 255, 213, 0.4));
+  }
+
+  /* Khởi tạo chuyển động dải màu chạy vô tận */
+  @keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   
   /* KHU VỰC CHIẾU CHÍNH (CỘT PHẢI) */
@@ -160,7 +198,7 @@
 <div id="album">
   <div class="album-header">
     <div class="album-title-wrap">
-      <span class="album-title">ROYALCITY R1 - MIRA A3</span>
+      <span class="album-title">KỶ NIỆM CUỐI NĂM - MIRA A3</span>
       <span class="album-count" id="album-count">0 tệp</span>
     </div>
     
@@ -173,10 +211,10 @@
 
   <div class="main-container">
     <div class="wishes-column">
-      <h3><i class="fa-solid fa-chalkboard-user"></i> Giáo viên</h3>
+      <h3><i class="fa-solid fa-chalkboard-user"></i> Ban Giám Hiệu & GV</h3>
       <div class="avatar-grid" id="teachers-grid"></div>
 
-      <h3><i class="fa-solid fa-graduation-cap"></i> Thành Viên Lớp</h3>
+      <h3><i class="fa-solid fa-graduation-cap"></i> Thành Viên Lớp (23)</h3>
       <div class="avatar-grid" id="students-grid"></div>
     </div>
 
@@ -258,32 +296,30 @@
     STUDENTS.forEach(s => sGrid.appendChild(createAvatarElement(s, false)));
   }
 
-  // 🛠️ CẬP NHẬT BIẾN AVATAR THÀNH TỐI GIẢN - HOVER HIỆN TÊN TỰ ĐỘNG
+  // SỬA ĐỔI HÀM KHỞI TẠO ĐỂ ĐƯA LỚP ĐỆM .avatar-inner VÀO PHỤC VỤ HIỆU ỨNG RAINBOW
   function createAvatarElement(person, isTeacher) {
     const circle = document.createElement('div');
     circle.className = 'avatar-circle';
-    
-    // Thêm Tooltip hệ thống: Di chuột vào sẽ tự hiện tên nhỏ bên cạnh con trỏ chuột
     circle.setAttribute('title', person.name);
-    
-    if(isTeacher) circle.style.borderColor = 'rgba(201,169,110,0.3)';
-
-    // Click vào hình tròn để thực hiện bộ lọc ảnh theo tên file
     circle.onclick = () => filterByPerson(person.name);
+
+    const inner = document.createElement('div');
+    inner.className = 'avatar-inner';
 
     if (person.img) {
       const img = document.createElement('img');
       img.src = person.img;
       img.alt = person.name;
-      circle.appendChild(img);
+      inner.appendChild(img);
     } else {
       const initial = document.createElement('span');
       initial.className = 'avatar-initial';
       initial.textContent = person.name.charAt(0).toUpperCase();
       if(isTeacher) initial.style.color = '#fff';
-      circle.appendChild(initial);
+      inner.appendChild(initial);
     }
 
+    circle.appendChild(inner);
     return circle;
   }
 
