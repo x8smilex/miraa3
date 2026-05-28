@@ -5,90 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Album Ảnh Lớp Tổng Kết Cuối Năm MIRA A3</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0d0d0d; --surface: #161616; --border: rgba(255,255,255,0.08);
-    --text: #e8e4dd; --muted: rgba(232,228,221,0.45); --accent: #c9a96e; --thumb-size: 80px;
+    --bg: #0a0a0a; --surface: #141414; --border: rgba(255,255,255,0.06);
+    --text: #e8e4dd; --muted: rgba(232,228,221,0.5); --accent: #c9a96e; 
+    --accent-dark: #a4844e; --thumb-size: 85px; --danger: #ff4757;
   }
   body { background: var(--bg); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; overflow: hidden; }
   
   #album { display: none; flex-direction: column; height: 100vh; }
   #album.visible { display: flex; }
   
-  .album-header { padding: 1rem 2rem; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .album-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; letter-spacing: 0.06em; }
-  .album-count { font-size: 13px; color: var(--muted); }
+  /* HEADER */
+  .album-header { padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); z-index: 10; }
+  .album-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+  .album-count { font-size: 13px; color: var(--muted); background: rgba(255,255,255,0.04); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); letter-spacing: 0.05em; }
 
-  /* BỐ CỤC CHÍNH ĐƯỢC CHIA THÀNH 2 CỘT */
+  /* BỐ CỤC CHÍNH 2 CỘT */
   .main-container { flex: 1; display: flex; min-height: 0; overflow: hidden; }
   
   /* CỘT TRÁI: KHUNG GỬI VÀ HIỂN THỊ LỜI CHÚC */
-  .wishes-column { width: 320px; border-right: 0.5px solid var(--border); background: #111; display: flex; flex-direction: column; padding: 1.5rem; gap: 1.5rem; }
-  .wishes-column h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--accent); font-weight: 400; }
+  .wishes-column { width: 340px; border-right: 1px solid var(--border); background: #0f0f0f; display: flex; flex-direction: column; padding: 1.5rem; gap: 1.5rem; }
+  .wishes-column h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--accent); font-weight: 400; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
   
-  /* Form nhập liệu lời chúc */
-  .wish-form { display: flex; flex-direction: column; gap: 8px; background: var(--surface); padding: 12px; border-radius: 8px; border: 0.5px solid var(--border); }
-  .wish-form input, .wish-form textarea { background: #222; border: 0.5px solid var(--border); color: var(--text); padding: 8px 12px; font-family: inherit; font-size: 13px; border-radius: 4px; outline: none; }
-  .wish-form textarea { resize: none; height: 60px; }
-  .wish-form input:focus, .wish-form textarea:focus { border-color: var(--accent); }
-  .wish-form button { background: var(--accent); color: #0d0d0d; border: none; padding: 8px; border-radius: 4px; font-weight: 500; cursor: pointer; font-size: 13px; transition: opacity 0.2s; }
-  .wish-form button:hover { opacity: 0.9; }
+  /* Form nhập liệu nâng cấp đẹp hơn */
+  .wish-form { display: flex; flex-direction: column; gap: 10px; background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+  .wish-form input, .wish-form textarea { background: #1a1a1a; border: 1px solid var(--border); color: var(--text); padding: 10px 14px; font-family: inherit; font-size: 13px; border-radius: 6px; outline: none; transition: all 0.3s; }
+  .wish-form textarea { resize: none; height: 65px; line-height: 1.4; }
+  .wish-form input:focus, .wish-form textarea:focus { border-color: var(--accent); background: #222; box-shadow: 0 0 8px rgba(201,169,110,0.15); }
+  
+  /* Nút gửi lời chúc */
+  .wish-form button { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #0d0d0d; border: none; padding: 10px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .wish-form button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); opacity: 0.95; }
 
-  /* Hiệu ứng chạy lời chúc tự động đi lên mượt mà */
-  .wishes-ticker-container { flex: 1; overflow: hidden; position: relative; border: 0.5px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.2); }
-  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 12px; animation: ticker 25s linear infinite; }
+  /* Vùng chạy chữ lời chúc */
+  .wishes-ticker-container { flex: 1; overflow: hidden; position: relative; border: 1px solid var(--border); border-radius: 12px; background: rgba(0,0,0,0.4); }
+  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 15px; animation: ticker 25s linear infinite; }
   .wishes-ticker:hover { animation-play-state: paused; }
   @keyframes ticker { 0% { top: 100%; transform: translateY(0); } 100% { top: 0%; transform: translateY(-100%); } }
   
-  .wish-card { background: var(--surface); padding: 12px; border-radius: 6px; border-left: 2px solid var(--accent); }
-  .wish-name { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
-  .wish-text { font-size: 13px; color: #ccc; line-height: 1.4; }
+  .wish-card { background: var(--surface); padding: 14px; border-radius: 8px; border: 1px solid var(--border); border-left: 3px solid var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .wish-name { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+  .wish-text { font-size: 13px; color: #d1cdc7; line-height: 1.5; }
 
-  /* CỘT PHẢI: KHU VỰC HIỂN THỊ ẢNH LỚN CHÍNH */
-  .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1rem; overflow: hidden; background: #080808; }
-  .main-img-wrap { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
-  #main-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; transition: opacity 0.25s ease; cursor: zoom-in; display: block; }
+  /* CỘT PHẢI: KHU VỰC ẢNH CHÍNH */
+  .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1.5rem; overflow: hidden; background: #050505; }
+  .main-img-wrap { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border-radius: 8px; }
+  #main-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: opacity 0.3s ease; cursor: zoom-in; display: block; border: 1px solid rgba(255,255,255,0.03); }
   #main-img.loading { opacity: 0; }
   
-  .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 10; backdrop-filter: blur(8px); }
-  .nav-btn:hover { background: rgba(201,169,110,0.15); border-color: var(--accent); }
-  .nav-btn.prev { left: 1rem; } .nav-btn.next { right: 1rem; }
+  /* Nút mũi tên chuyển ảnh sắc nét hơn */
+  .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(20,20,20,0.6); border: 1px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; z-index: 10; backdrop-filter: blur(12px); transition: all 0.3s; }
+  .nav-btn:hover { background: var(--accent); color: #0a0a0a; border-color: var(--accent); transform: translateY(-50%) scale(1.05); box-shadow: 0 0 15px rgba(201,169,110,0.4); }
+  .nav-btn.prev { left: 1.5rem; } .nav-btn.next { right: 1.5rem; }
   
-  /* Nhóm nút tương tác góc bên phải ảnh */
-  .action-group { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 8px; z-index: 10; }
-  .dl-btn, .like-btn { padding: 8px 16px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 20px; color: var(--text); font-size: 12px; cursor: pointer; text-decoration: none; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 6px; transition: all 0.2s; user-select: none; }
-  .dl-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .like-btn:hover { border-color: #ff4757; color: #ff4757; }
-  .like-btn.liked { background: #ff4757; color: #fff; border-color: #ff4757; }
+  /* Thanh thời gian chạy ngầm khi bật Slideshow */
+  .ss-progress-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 3s linear; border-radius: 0 0 8px 8px; }
+  
+  /* NHÓM NÚT TƯƠNG TÁC GÓC TRÊN */
+  .action-group { position: absolute; top: 1.5rem; right: 1.5rem; display: flex; gap: 10px; z-index: 10; }
+  
+  .btn-ui { padding: 9px 18px; background: rgba(20,20,20,0.7); border: 1px solid var(--border); border-radius: 30px; color: var(--text); font-size: 13px; font-weight: 400; cursor: pointer; text-decoration: none; backdrop-filter: blur(12px); display: flex; align-items: center; gap: 8px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); user-select: none; }
+  
+  .like-btn:hover { border-color: var(--danger); color: var(--danger); background: rgba(255, 71, 87, 0.05); }
+  .like-btn.liked { background: var(--danger); color: #fff; border-color: var(--danger); box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4); }
+  
+  .dl-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(201, 169, 110, 0.05); }
+  
+  .slideshow-btn:hover { border-color: #2ed573; color: #2ed573; background: rgba(46, 213, 115, 0.05); }
+  .slideshow-btn.playing { background: #2ed573; color: #0a0a0a; border-color: #2ed573; box-shadow: 0 4px 12px rgba(46, 213, 115, 0.4); font-weight: 500; }
 
-  .img-counter { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); background: rgba(13,13,13,0.6); padding: 4px 12px; border-radius: 20px; pointer-events: none; }
+  .img-counter { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text); font-weight: 400; background: rgba(20,20,20,0.7); border: 1px solid var(--border); padding: 6px 16px; border-radius: 30px; pointer-events: none; backdrop-filter: blur(12px); letter-spacing: 0.05em; }
   
-  /* THANH STRIP THUMBNAILS ẢNH NHỎ PHÍA DƯỚI */
-  .thumb-strip { flex-shrink: 0; padding: 0.75rem 1rem; border-top: 0.5px solid var(--border); background: var(--surface); overflow-x: auto; display: flex; gap: 8px; align-items: center; scroll-behavior: smooth; }
-  .thumb { flex-shrink: 0; width: var(--thumb-size); height: var(--thumb-size); border-radius: 6px; object-fit: cover; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s; opacity: 0.4; }
-  .thumb.active { border-color: var(--accent); opacity: 1; transform: translateY(-2px); }
+  /* THANH THUMBNAILS PHÍA DƯỚI */
+  .thumb-strip { flex-shrink: 0; padding: 0.9rem 1.5rem; border-top: 1px solid var(--border); background: var(--surface); overflow-x: auto; display: flex; gap: 10px; align-items: center; scroll-behavior: smooth; }
+  .thumb { flex-shrink: 0; width: var(--thumb-size); height: var(--thumb-size); border-radius: 8px; object-fit: cover; cursor: pointer; border: 2px solid transparent; transition: all 0.25s; opacity: 0.35; }
+  .thumb:hover { opacity: 0.7; }
+  .thumb.active { border-color: var(--accent); opacity: 1; transform: translateY(-4px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); }
   
-  /* MÀN HÌNH LOADING & BÁO LỖI */
-  #loading { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+  /* LOADING SCREEN */
+  #loading { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; }
   #loading.hidden { display: none; }
-  .spinner { width: 36px; height: 36px; border: 1.5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  .spinner { width: 40px; height: 40px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  
   #error-msg { display: none; position: fixed; inset: 0; z-index: 300; background: var(--bg); align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; }
   #error-msg.show { display: flex; }
 
-  /* LIGHTBOX PHÓNG TO ẢNH */
-  #lightbox { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
-  #lightbox.open { display: flex; } #lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; }
-  .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 36px; height: 36px; background: rgba(255,255,255,0.08); border: none; border-radius: 50%; color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  /* LIGHTBOX PHÓNG TO */
+  #lightbox { position: fixed; inset: 0; z-index: 500; background: rgba(5,5,5,0.98); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lightbox.open { display: flex; } #lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; box-shadow: 0 10px 50px rgba(0,0,0,0.8); border-radius: 4px; }
+  .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 40px; height: 40px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .lb-close:hover { background: var(--danger); border-color: var(--danger); color: #fff; transform: rotate(90deg); }
 
-  /* RESPONSIVE TRÊN ĐIỆN THOẠI (CHUYỂN THÀNH DỌC) */
+  /* RESPONSIVE THIẾT BỊ DI ĐỘNG */
   @media (max-width: 768px) {
     .main-container { flex-direction: column-reverse; }
-    .wishes-column { width: 100%; height: 220px; padding: 1rem; border-right: none; border-top: 0.5px solid var(--border); }
-    .wishes-ticker-container { height: 90px; }
-    :root { --thumb-size: 65px; }
-    .nav-btn { width: 36px; height: 36px; }
+    .wishes-column { width: 100%; height: 240px; padding: 1rem; border-right: none; border-top: 1px solid var(--border); }
+    .wishes-ticker-container { height: 100px; }
+    .action-group { top: auto; bottom: 4.5rem; right: 50%; transform: translateX(50%); width: max-content; gap: 6px; }
+    .btn-ui { padding: 8px 12px; font-size: 11px; }
+    .img-counter { bottom: auto; top: 1rem; }
+    :root { --thumb-size: 68px; }
+    .nav-btn { width: 38px; height: 38px; font-size: 14px; }
+    .nav-btn.prev { left: 0.5rem; } .nav-btn.next { right: 0.5rem; }
   }
 </style>
 </head>
@@ -96,12 +118,12 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.1em;">ĐANG TẢI ALBUM & LỜI CHÚC MIRA A3...</p>
+  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.15em;">ĐANG TẢI ALBUM & LỜI CHÚC MIRA A3...</p>
 </div>
 
 <div id="error-msg">
-  <h2 style="font-family: 'Cormorant Garamond', serif; font-weight:300;">Không thể tải dữ liệu</h2>
-  <p id="error-detail" style="color: var(--muted); font-size: 14px;">Vui lòng kiểm tra lại đường dẫn Web App Apps Script.</p>
+  <h2 style="font-family: 'Cormorant Garamond', serif; font-weight:300; color: var(--accent);">Không thể kết nối</h2>
+  <p id="error-detail" style="color: var(--muted); font-size: 14px;">Vui lòng kiểm tra lại cấu hình Web App.</p>
 </div>
 
 <div id="album">
@@ -112,28 +134,29 @@
 
   <div class="main-container">
     <div class="wishes-column">
-      <h3>Lời Chúc Lớp Mình</h3>
+      <h3><i class="fa-regular fa-comments"></i> Lời Chúc Lớp Mình</h3>
       <form class="wish-form" id="wish-form" onsubmit="sendWish(event)">
         <input type="text" id="wish-name" placeholder="Tên của bạn..." required>
-        <textarea id="wish-msg" placeholder="Viết lời chúc tại đây..." required></textarea>
-        <button type="submit" id="wish-submit">Gửi Lời Chúc ✨</button>
+        <textarea id="wish-msg" placeholder="Viết lời chúc lưu niệm tại đây..." required></textarea>
+        <button type="submit" id="wish-submit"><i class="fa-regular fa-paper-plane"></i> Gửi Lời Chúc ✨</button>
       </form>
       <div class="wishes-ticker-container">
-        <div class="wishes-ticker" id="wishes-ticker">
-          </div>
+        <div class="wishes-ticker" id="wishes-ticker"></div>
       </div>
     </div>
 
     <div class="viewer-area" id="viewer-area">
-      <button class="nav-btn prev" onclick="prevImg()">&#8592;</button>
+      <button class="nav-btn prev" onclick="prevImg()"><i class="fa-solid fa-chevron-left"></i></button>
       <div class="main-img-wrap" style="width:100%; height:100%">
         <img id="main-img" src="" alt="Ảnh chính" onclick="openLightbox()" />
+        <div class="ss-progress-bar" id="ss-progress-bar"></div>
       </div>
-      <button class="nav-btn next" onclick="nextImg()">&#8594;</button>
+      <button class="nav-btn next" onclick="nextImg()"><i class="fa-solid fa-chevron-right"></i></button>
       
       <div class="action-group">
-        <button class="like-btn" id="like-btn" onclick="likeImage()">❤️ Thả Tim (<span id="like-count">0</span>)</button>
-        <a id="dl-btn" class="dl-btn" target="_blank" rel="noopener">↓ Tải Ảnh Gốc</a>
+        <button class="btn-ui slideshow-btn" id="slideshow-btn" onclick="toggleSlideshow()"><i class="fa-solid fa-play"></i> Tự Động Chạy</button>
+        <button class="btn-ui like-btn" id="like-btn" onclick="likeImage()"><i class="fa-regular fa-heart"></i> Thả Tim (<span id="like-count">0</span>)</button>
+        <a id="dl-btn" class="btn-ui dl-btn" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> Tải Ảnh Gốc</a>
       </div>
       
       <div class="img-counter" id="img-counter"></div>
@@ -144,31 +167,28 @@
 </div>
 
 <div id="lightbox" onclick="closeLightbox()">
-  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
   <img id="lightbox-img" src="" alt="Xem phóng to" onclick="event.stopPropagation()" />
 </div>
 
 <script>
-  // 🔴 THAY ĐƯỜNG LINK WEB APP APPS SCRIPT MỚI TINH CỦA BẠN VÀO ĐÂY ĐỂ CHẠY ĐƯỢC 100%
+  // 🔴 ĐÃ CẬP NHẬT ID SCRIPT MỚI TINH CỦA BẠN VÀO ĐÂY
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQQa3utFNSA66dg7l4FXYxpAsDA9mxtyNHk-m7eIAcwBBsN0u6S81ubew2JVcuz6QRxA/exec";
 
   let images = [];
   let current = 0;
+  
+  // Các biến phục vụ tính năng Slideshow
+  let slideshowInterval = null;
+  const SLIDESHOW_SPEED = 3000; // Thời gian chuyển ảnh (3 giây)
 
   window.onload = () => {
-    if(APPS_SCRIPT_URL.includes("THAY_LINK_WEB_APP")) {
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('error-msg').classList.add('show');
-      document.getElementById('error-detail').textContent = "Bạn chưa dán đường dẫn APPS_SCRIPT_URL mới vào cuối file HTML.";
-      return;
-    }
     loadAlbumData();
   };
 
-  // Hàm gọi API lấy dữ liệu từ Google Drive và Sheet
   async function loadAlbumData() {
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=getData`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getData`, { method: 'GET', redirect: 'follow' });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
 
@@ -190,23 +210,19 @@
     }
   }
 
-  // Đổ danh sách lời chúc và tự động lặp lại để tạo vòng cuộn liên tục
   function renderWishes(wishes) {
     const ticker = document.getElementById('wishes-ticker');
-    ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text">Chưa có lời chúc nào. Hãy gửi lời chúc đầu tiên!</p></div>' : '';
+    ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text"><i class="fa-solid fa-pen-fancy"></i> Hãy gửi lời chúc đầu tiên lưu giữ kỷ niệm lớp mình nhé!</p></div>' : '';
     
-    // Nhân bản mảng lời chúc nếu danh sách quá ngắn để tránh khoảng trống khi cuộn
     const list = wishes.length > 0 && wishes.length < 5 ? [...wishes, ...wishes, ...wishes] : wishes;
-    
     list.forEach(w => {
       const card = document.createElement('div');
       card.className = 'wish-card';
-      card.innerHTML = `<div class="wish-name">✍️ ${escapeHtml(w.name)}</div><div class="wish-text">${escapeHtml(w.message)}</div>`;
+      card.innerHTML = `<div class="wish-name"><i class="fa-regular fa-user"></i> ${escapeHtml(w.name)}</div><div class="wish-text">${escapeHtml(w.message)}</div>`;
       ticker.appendChild(card);
     });
   }
 
-  // Dựng danh sách ảnh nhỏ ở thanh dưới cùng
   function buildThumbs() {
     const strip = document.getElementById('thumb-strip');
     strip.innerHTML = '';
@@ -216,34 +232,42 @@
       el.src = img.thumbnailLink;
       el.alt = img.name;
       el.loading = 'lazy';
-      el.onclick = () => showImage(i);
+      el.onclick = () => { stopSlideshow(); showImage(i); };
       el.dataset.idx = i;
       strip.appendChild(el);
     });
   }
 
-  // Xử lý hiển thị ảnh chính chất lượng cao mượt mà không bị lỗi Load Failed
   function showImage(idx) {
     if(!images.length) return;
     current = idx;
     const img = images[idx];
     const mainImg = document.getElementById('main-img');
-    
-    // Bẻ đuôi ảnh từ sz=w220 sang sz=w1600 để lấy ảnh chính độ phân giải cao sắc nét
     const displayUrl = img.thumbnailLink.replace('sz=w220', 'sz=w1600');
 
     mainImg.classList.add('loading');
     mainImg.src = displayUrl;
-    mainImg.onload = () => mainImg.classList.remove('loading');
+    mainImg.onload = () => {
+      mainImg.classList.remove('loading');
+      if (slideshowInterval) {
+        resetProgressBar();
+      }
+    };
 
     document.getElementById('lightbox-img').src = displayUrl;
     document.getElementById('dl-btn').href = img.webContentLink;
-    document.getElementById('img-counter').textContent = `${idx + 1} / ${images.length}`;
+    document.getElementById('img-counter').innerHTML = `<i class="fa-regular fa-images"></i> ${idx + 1} / ${images.length}`;
     document.getElementById('like-count').textContent = img.likes || 0;
 
-    // Kiểm tra trạng thái thả tim từ bộ nhớ LocalStorage của trình duyệt khách
     const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
-    document.getElementById('like-btn').classList.toggle('liked', likedList.includes(img.id));
+    const likeBtn = document.getElementById('like-btn');
+    if (likedList.includes(img.id)) {
+      likeBtn.classList.add('liked');
+      likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i> Đã Thả Tim (<span id="like-count">${img.likes}</span>)`;
+    } else {
+      likeBtn.classList.remove('liked');
+      likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> Thả Tim (<span id="like-count">${img.likes}</span>)`;
+    }
 
     document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
     const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
@@ -254,26 +278,60 @@
     history.replaceState({}, '', '?' + p.toString());
   }
 
-  // TÍNH NĂNG THẢ TIM (GỬI LÊN GOOGLE SHEET)
+  /* SLIDESHOW TỰ ĐỘNG CHẠY MƯỢT MÀ */
+  function toggleSlideshow() {
+    const btn = document.getElementById('slideshow-btn');
+    if (slideshowInterval) {
+      stopSlideshow();
+    } else {
+      btn.classList.add('playing');
+      btn.innerHTML = `<i class="fa-solid fa-pause"></i> Dừng Chạy`;
+      resetProgressBar();
+      slideshowInterval = setInterval(() => {
+        nextImg();
+      }, SLIDESHOW_SPEED);
+    }
+  }
+
+  function stopSlideshow() {
+    const btn = document.getElementById('slideshow-btn');
+    if (slideshowInterval) {
+      clearInterval(slideshowInterval);
+      slideshowInterval = null;
+    }
+    btn.classList.remove('playing');
+    btn.innerHTML = `<i class="fa-solid fa-play"></i> Tự Động Chạy`;
+    document.getElementById('ss-progress-bar').style.transition = 'none';
+    document.getElementById('ss-progress-bar').style.width = '0%';
+  }
+
+  function resetProgressBar() {
+    const bar = document.getElementById('ss-progress-bar');
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    setTimeout(() => {
+      bar.style.transition = `width ${SLIDESHOW_SPEED}ms linear`;
+      bar.style.width = '100%';
+    }, 20);
+  }
+
   async function likeImage() {
     if (!images.length) return;
     const img = images[current];
     const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
     
-    if (likedList.includes(img.id)) {
-      alert("Bạn đã thả tim cho bức ảnh kỷ niệm này rồi nhé! ❤️");
-      return;
-    }
+    if (likedList.includes(img.id)) return;
 
-    // Tăng số lượng tim ngay lập tức trên giao diện (Optimistic UI) giúp trải nghiệm mượt mà hơn
     img.likes = (img.likes || 0) + 1;
     document.getElementById('like-count').textContent = img.likes;
-    document.getElementById('like-btn').classList.add('liked');
+    
+    const likeBtn = document.getElementById('like-btn');
+    likeBtn.classList.add('liked');
+    likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i> Đã Thả Tim (<span id="like-count">${img.likes}</span>)`;
     
     likedList.push(img.id);
     localStorage.setItem('mira_liked', JSON.stringify(likedList));
 
-    // Gọi API lưu số lượt tim ngầm vào Google Sheet ở chế độ no-cors không gây nghẽn dòng tải trang
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -282,7 +340,6 @@
     });
   }
 
-  // TÍNH NĂNG GỬI LỜI CHÚC (LƯU VÀO GOOGLE SHEET)
   async function sendWish(e) {
     e.preventDefault();
     const nameInput = document.getElementById('wish-name');
@@ -294,7 +351,7 @@
     if(!name || !message) return;
 
     btn.disabled = true;
-    btn.textContent = "Đang gửi... ⌛";
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Đang gửi...`;
 
     try {
       await fetch(APPS_SCRIPT_URL, {
@@ -304,35 +361,30 @@
         body: JSON.stringify({ action: 'addWish', name: name, message: message })
       });
 
-      // Hiển thị ngay lập tức lời chúc vừa viết lên đầu khung chữ chạy mà không cần f5 tải lại trang
       const ticker = document.getElementById('wishes-ticker');
       const card = document.createElement('div');
       card.className = 'wish-card';
-      card.innerHTML = `<div class="wish-name">✍️ ${escapeHtml(name)}</div><div class="wish-text">${escapeHtml(message)}</div>`;
+      card.innerHTML = `<div class="wish-name"><i class="fa-regular fa-user"></i> ${escapeHtml(name)}</div><div class="wish-text">${escapeHtml(message)}</div>`;
       ticker.insertBefore(card, ticker.firstChild);
 
       msgInput.value = '';
-      alert("Gửi lời chúc thành công! Cảm ơn đóng góp của bạn dành cho MIRA A3. ❤️");
+      alert("Gửi lời chúc thành công! Cảm ơn bạn rất nhiều. ❤️");
     } catch (err) {
-      alert("Đã xảy ra lỗi đường truyền, vui lòng thử lại sau ít phút.");
+      alert("Có lỗi xảy ra khi gửi, vui lòng thử lại.");
     } finally {
       btn.disabled = false;
-      btn.textContent = "Gửi Lời Chúc ✨";
+      btn.innerHTML = `<i class="fa-regular fa-paper-plane"></i> Gửi Lời Chúc ✨`;
     }
   }
 
   function prevImg() { if (images.length) showImage((current - 1 + images.length) % images.length); }
   function nextImg() { if (images.length) showImage((current + 1) % images.length); }
-  function openLightbox() { document.getElementById('lightbox').classList.add('open'); }
+  function openLightbox() { stopSlideshow(); document.getElementById('lightbox').classList.add('open'); }
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
-  
-  // Hàm bảo mật chống XSS chèn mã độc vào ô lời chúc
-  function escapeHtml(str) { 
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); 
-  }
+  function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
-  // Điều khiển bằng nút mũi tên bàn phím máy tính
   document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') stopSlideshow();
     if (document.getElementById('lightbox').classList.contains('open')) {
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowLeft') prevImg();
@@ -343,13 +395,15 @@
     if (e.key === 'ArrowRight') nextImg();
   });
 
-  // Điều khiển vuốt màn hình (Swipe) trên điện thoại
   let touchStartX = 0;
   const viewer = document.getElementById('viewer-area');
   viewer && viewer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   viewer && viewer.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) dx < 0 ? nextImg() : prevImg();
+    if (Math.abs(dx) > 50) {
+      stopSlideshow();
+      dx < 0 ? nextImg() : prevImg();
+    }
   }, { passive: true });
 </script>
 </body>
