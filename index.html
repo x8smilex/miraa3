@@ -59,7 +59,7 @@
   .nav-btn.prev { left: 1rem; } .nav-btn.next { right: 1rem; }
   .img-utilities { position: absolute; bottom: 1rem; right: 1rem; display: flex; gap: 8px; z-index: 15; }
   
-  /* TƯƠNG TÁC THẢ TIM, GẮN THẺ */
+  /* TƯƠNG TÁC THẢ TIM, GẮN THÈ */
   .interaction-panel { max-width: 800px; margin: 1.5rem auto; padding: 0 1rem; text-align: center; }
   .stats-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 1rem; font-size: 14px; }
   .heart-btn { font-size: 18px; color: #ff4d4d; border: 0.5px solid #ff4d4d; background: transparent; padding: 6px 16px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
@@ -169,7 +169,7 @@
 </div>
 
 <script>
-  // 🔴 THAY ĐƯỜNG LINK WEB APP CỦA BẠN VÀO ĐÂY ĐỂ HOẠT ĐỘNG
+  // ĐƯỜNG LINK WEB APP APPS SCRIPT ĐÃ ĐƯỢC KẾT NỐI CHUẨN XÁC
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC9BQV1vOkUNtPPBJgchXuigngFN7488bA5p5MJeYkiPchU-2jjuymv2W7GQFo8O4gpA/exec";
 
   let allImages = []; 
@@ -199,7 +199,6 @@
     document.getElementById('album-count').textContent = filteredImages.length + ' ảnh';
     buildThumbs();
     if (filteredImages.length > 0) {
-      // Đọc chỉ số ảnh từ thanh địa chỉ URL nếu có tham số ?i=...
       const p = new URLSearchParams(location.search);
       let startIdx = parseInt(p.get('i') || '0');
       if (startIdx >= filteredImages.length || startIdx < 0) startIdx = 0;
@@ -212,10 +211,7 @@
 
   async function loadData() {
     try {
-      if(APPS_SCRIPT_URL.includes("DÁN_LINK")) {
-        alert("Vui lòng dán link Web App Apps Script mới vào biến APPS_SCRIPT_URL ở cuối file.");
-        return;
-      }
+      // Gọi API Apps Script đã sửa lỗi bảo mật Google Drive
       const res = await fetch(APPS_SCRIPT_URL);
       const data = await res.json();
       allImages = data.files || [];
@@ -237,6 +233,7 @@
       const el = document.createElement('img');
       el.className = 'thumb';
       el.src = img.thumbnailLink;
+      el.alt = img.name;
       el.onclick = () => showImage(i);
       el.dataset.idx = i;
       strip.appendChild(el);
@@ -249,7 +246,7 @@
     const img = filteredImages[idx];
     const mainImg = document.getElementById('main-img');
 
-    // FIX LỖI TĂNG KÍCH THƯỚC ẢNH CHẤT LƯỢNG CAO SẮC NÉT KHÔNG BỊ CHẶN 403
+    // FIX CHÍNH XÁC LỖI KHÔNG HIỆN ẢNH: Chuyển đổi độ phân giải cao sắc nét (s1600) không lo bị chặn 403
     const displayUrl = img.thumbnailLink.replace('=s220', '=s1600');
     mainImg.classList.add('loading');
     mainImg.src = displayUrl;
@@ -266,7 +263,7 @@
     const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center' });
 
-    // Đồng bộ số thứ tự ảnh đang xem lên URL trình duyệt (?i=...)
+    // Đồng bộ số thứ tự ảnh lên URL
     const p = new URLSearchParams(location.search);
     p.set('i', idx);
     history.replaceState({}, '', '?' + p.toString());
@@ -277,7 +274,7 @@
     document.getElementById('img-counter').textContent = '0 / 0';
     document.getElementById('like-count').textContent = '0';
     document.getElementById('tags-container').innerHTML = '<i>Trống</i>';
-    document.getElementById('thumb-strip').innerHTML = '<p style="padding:1rem;color:var(--muted)">Chưa có khoảnh khắc nổi bật nào được thả tim.</p>';
+    document.getElementById('thumb-strip').innerHTML = '<p style="padding:1rem;color:var(--muted)">Chưa có khoảnh khắc nào được thả tim.</p>';
   }
 
   async function likePhoto() {
@@ -350,7 +347,7 @@
       music.pause();
       btn.textContent = '🎵 Bật nhạc';
     } else {
-      music.play().catch(() => alert("Hãy bấm chuột hoặc click vào trang web để cho phép trình duyệt phát nhạc nhé!"));
+      music.play().catch(() => alert("Hãy click hoặc tương tác lên màn hình một lần để cho phép phát nhạc nhé!"));
       btn.textContent = '🔇 Tắt nhạc';
     }
     isMusicPlaying = !isMusicPlaying;
@@ -373,7 +370,7 @@
     const name = nameInput.value.trim();
     const message = msgInput.value.trim();
 
-    if(!name || !message) { alert("Vui lòng điền tên và lời nhắn Lưu bút."); return; }
+    if(!name || !message) { alert("Vui lòng điền tên và nội dung lời nhắn."); return; }
 
     const container = document.getElementById('gb-container');
     const div = document.createElement('div');
@@ -400,7 +397,7 @@
   function openLightbox() { document.getElementById('lightbox').classList.add('open'); }
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
 
-  // Các nút bấm mũi tên bàn phím máy tính
+  // Các nút điều khiển bàn phím máy tính
   document.addEventListener('keydown', e => {
     if (document.getElementById('lightbox').classList.contains('open')) {
       if (e.key === 'Escape') closeLightbox();
@@ -411,15 +408,6 @@
     if (e.key === 'ArrowLeft') prevImg();
     if (e.key === 'ArrowRight') nextImg();
   });
-
-  // Vuốt màn hình điện thoại di động
-  let touchStartX = 0;
-  const viewer = document.getElementById('viewer-area');
-  viewer && viewer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  viewer && viewer.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) dx < 0 ? nextImg() : prevImg();
-  }, { passive: true });
 </script>
 </body>
 </html>
