@@ -153,7 +153,7 @@
 
 <script>
   // 🔴 THAY ĐƯỜNG LINK WEB APP APPS SCRIPT MỚI CỦA BẠN VÀO ĐÂY
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFKaFSccIUM1IEMRp16T4d_wCrR--jMTABugzrMCXz8ZxYuP3O0hDO9ptjOplID_nZhw/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2BNahLSE3QgZSQr98b3LgjdoZWTDMGjcEZBuzXIuw4S1qEdfiIIgoNv5b9f5xPfLufg/exec";
 
   let images = [];
   let current = 0;
@@ -227,7 +227,7 @@
     current = idx;
     const img = images[idx];
     const mainImg = document.getElementById('main-img');
-    const displayUrl = img.thumbnailLink.replace(/=s\d+$/, '=s1600');
+    const displayUrl = img.thumbnailLink; // Lấy trực tiếp link ảnh chất lượng cao từ Drive
 
     mainImg.classList.add('loading');
     mainImg.src = displayUrl;
