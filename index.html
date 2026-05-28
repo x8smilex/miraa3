@@ -77,7 +77,7 @@
   /* THANH TỔNG HỢP: SLIDER KHUNG THUMBNAIL */
   .thumb-slider-wrapper { flex-shrink: 0; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--border); }
   
-  /* 🛠️ CẤU HÌNH GIAO DIỆN THANH TAB MỚI */
+  /* CẤU HÌNH GIAO DIỆN THANH TAB */
   .tabs-container { display: flex; gap: 10px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); }
   .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 16px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; }
   .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
@@ -206,10 +206,10 @@
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-SMcpFxo-wyojXVXb4_HVSS6Q0ilRVcGSynjjvaCv2_7rCAqrlwNiHc_7Q0WF_fNU/exec";
 
-  let masterImages = []; // Lưu trữ mảng gốc của Drive
-  let images = [];       // Mảng hiển thị thực tế theo tab lọc
+  let masterImages = []; 
+  let images = [];       
   let current = 0;
-  let currentTab = 'all'; // 'all' hoặc 'popular'
+  let currentTab = 'all'; 
   
   let slideshowInterval = null;
   const SLIDESHOW_SPEED = 3000; 
@@ -225,7 +225,7 @@
       if (data.error) throw new Error(data.error);
 
       masterImages = data.files || [];
-      images = [...masterImages]; // Mặc định ban đầu nạp hết ảnh
+      images = [...masterImages]; 
       
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('album').classList.add('visible');
@@ -256,7 +256,6 @@
     });
   }
 
-  /* 🛠️ LOGIC BỘ LỌC TABS TÌM FILE ĐƯỢC LIKE NHIỀU NHẤT */
   function switchTab(tab) {
     if (currentTab === tab) return;
     currentTab = tab;
@@ -266,9 +265,8 @@
     document.getElementById('tab-popular').classList.toggle('active', tab === 'popular');
 
     if (tab === 'all') {
-      images = [...masterImages]; // Khôi phục mảng gốc từ A-Z
+      images = [...masterImages]; 
     } else {
-      // Lọc ra các file có like > 0 và xếp từ nhiều tim nhất đến ít tim nhất
       images = masterImages
         .filter(img => (img.likes || 0) > 0)
         .sort((a, b) => b.likes - a.likes);
@@ -276,11 +274,9 @@
 
     buildThumbs();
 
-    // Reset hiển thị về ảnh đầu tiên của danh sách lọc mới
     if (images.length > 0) {
       showImage(0);
     } else {
-      // Trường hợp tab yêu thích trống rỗng chưa ai thả tim
       document.getElementById('main-img').classList.remove('visible');
       document.getElementById('main-video').classList.remove('visible');
       document.getElementById('thumb-strip').innerHTML = '<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-regular fa-heart"></i> Chưa có bức ảnh nào được thả tim. Hãy xem tab Tất cả và thả tim nhé!</div>';
@@ -313,7 +309,6 @@
         wrapper.appendChild(badge);
       }
       
-      // Nếu có số tim > 0, hiển thị huy hiệu đếm tim nhỏ lên đầu góc ảnh nhỏ
       if ((img.likes || 0) > 0) {
         const likeBadge = document.createElement('div');
         likeBadge.className = 'thumb-like-badge';
@@ -325,6 +320,7 @@
     });
   }
 
+  /* CHUYỂN TRANG DANH SÁCH ẢNH NHỎ */
   function scrollThumbstrip(direction) {
     const strip = document.getElementById('thumb-strip');
     const scrollAmount = strip.clientWidth * 0.8; 
@@ -342,14 +338,11 @@
     mainVideo.pause();
     mainVideo.src = "";
 
-    // TÌM ĐOẠN NÀY TRONG HÀM showImage(idx) VÀ THAY ĐÈ VÀO CỰC KỲ DỄ DÀNG:
     if (item.isVideo) {
-      // 🎥 ĐÂY LÀ VIDEO
       mainImg.classList.remove('visible');
       mainVideo.classList.add('visible');
       
-      // SỬA DÒNG NÀY: Chuyển đổi ID thành link stream video chuẩn mã mở của Google Drive
-      // Định dạng này ép trình duyệt phát trực tuyến (Stream) thay vì bắt tải về, sửa lỗi màn hình đen gạch chéo
+      // Đã sửa đổi định dạng kết nối trực tuyến stream thay vì download
       mainVideo.src = "https://docs.google.com/get_video_info?docid=" + item.id + "&format=mp4";
       
       if (slideshowInterval) stopSlideshow();
@@ -386,7 +379,6 @@
     const activeThumb = document.querySelector(`.thumb-item[data-idx="${idx}"]`);
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
-    // Chỉ thay đổi tham số URL `?i=` nếu đang xem ở tab Tất cả để tránh lỗi lệch index mảng
     if (currentTab === 'all') {
       const p = new URLSearchParams(location.search);
       p.set('i', idx);
@@ -437,7 +429,6 @@
     img.likes = (img.likes || 0) + 1;
     document.getElementById('like-count').textContent = img.likes;
     
-    // Tìm và cập nhật lại số tim trên mảng gốc tổng master tương ứng
     const masterMatch = masterImages.find(m => m.id === img.id);
     if (masterMatch) masterMatch.likes = img.likes;
 
@@ -448,7 +439,6 @@
     likedList.push(img.id);
     localStorage.setItem('mira_liked', JSON.stringify(likedList));
     
-    // Tái dựng lại huy hiệu tim trên ảnh nhỏ mà không cần chuyển trang
     buildThumbs();
 
     fetch(APPS_SCRIPT_URL, {
@@ -499,7 +489,6 @@
   function openLightbox() { 
     if (images[current] && images[current].isVideo) return; 
     stopSlideshow(); 
-    document.getElementById('lightbox').open = true;
     document.getElementById('lightbox').classList.add('open'); 
   }
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
