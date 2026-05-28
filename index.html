@@ -78,10 +78,12 @@
   .thumb-slider-wrapper { flex-shrink: 0; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--border); }
   
   /* CẤU HÌNH GIAO DIỆN THANH TAB */
-  .tabs-container { display: flex; gap: 10px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); }
-  .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 16px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; }
+  .tabs-container { display: flex; gap: 8px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); overflow-x: auto; scrollbar-width: none; }
+  .tabs-container::-webkit-scrollbar { display: none; }
+  .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 14px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; white-space: nowrap; }
   .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
   .tab-btn.active { color: var(--accent); background: rgba(201, 169, 110, 0.08); border-color: rgba(201,169,110,0.2); font-weight: 500; }
+  .tab-btn.tab-danger.active { color: var(--danger); background: rgba(255, 71, 87, 0.08); border-color: rgba(255, 71, 87, 0.2); }
 
   .slider-main-row { display: flex; align-items: center; padding: 0 10px; width: 100%; }
   .thumb-nav-btn { background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: var(--text); width: 36px; height: 75px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.3s; z-index: 5; }
@@ -94,6 +96,7 @@
   .thumb { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; border: 2px solid transparent; transition: all 0.25s; opacity: 0.35; }
   .thumb-item:hover .thumb { opacity: 0.7; }
   .thumb-item.active .thumb { border-color: var(--accent); opacity: 1; transform: translateY(-4px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); }
+  .tab-danger-active.thumb-item.active .thumb { border-color: var(--danger); box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3); }
   
   .video-badge { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 0.5px solid rgba(255,255,255,0.2); z-index: 2; }
   
@@ -122,7 +125,7 @@
     .main-container { flex-direction: column-reverse; }
     .wishes-column { width: 100%; height: 240px; padding: 1rem; border-right: none; border-top: 1px solid var(--border); }
     .wishes-ticker-container { height: 100px; }
-    .tabs-container { padding: 8px 10px 0 10px; gap: 5px; white-space: nowrap; overflow-x: auto; }
+    .tabs-container { padding: 8px 10px 0 10px; gap: 5px; }
     .tab-btn { font-size: 10px; padding: 4px 12px; }
     .img-counter { top: 1rem; bottom: auto; }
     :root { --thumb-size: 68px; }
@@ -186,9 +189,10 @@
 
   <div class="thumb-slider-wrapper">
     <div class="tabs-container">
-      <button class="tab-btn active" id="tab-all" onclick="switchTab('all')"><i class="fa-solid fa-layer-group"></i> Tất cả khoảnh khắc</button>
-      <button class="tab-btn" id="tab-images" onclick="switchTab('images')"><i class="fa-solid fa-image"></i> Hình ảnh lớp</button>
+      <button class="tab-btn active" id="tab-all" onclick="switchTab('all')"><i class="fa-solid fa-layer-group"></i> Tất cả</button>
+      <button class="tab-btn" id="tab-images" onclick="switchTab('images')"><i class="fa-solid fa-image"></i> Hình ảnh</button>
       <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')"><i class="fa-solid fa-video"></i> Video Clip</button>
+      <button class="tab-btn tab-danger" id="tab-liked" onclick="switchTab('liked')"><i class="fa-solid fa-heart"></i> Yêu thích nhất ❤️</button>
     </div>
     
     <div class="slider-main-row">
@@ -205,7 +209,6 @@
 </div>
 
 <script>
-  // 🔴 ĐÃ CẬP NHẬT ĐƯỜNG LINK WEB APP APPS SCRIPT MỚI CỦA BẠN VÀO ĐÂY:
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1JoIYMhXRxZB60HyIqSrnCzk54F0-ORbVrDSjRetoru6eW0FhmXyWswdIVpb7223l/exec";
 
   let masterImages = []; 
@@ -271,6 +274,7 @@
     });
   }
 
+  /* LOGIC PHÂN LOẠI TABS NÂNG CẤP THÊM BỘ LỌC TOP LIKED */
   function switchTab(tab) {
     if (currentTab === tab) return;
     currentTab = tab;
@@ -279,6 +283,7 @@
     document.getElementById('tab-all').classList.toggle('active', tab === 'all');
     document.getElementById('tab-images').classList.toggle('active', tab === 'images');
     document.getElementById('tab-videos').classList.toggle('active', tab === 'videos');
+    document.getElementById('tab-liked').classList.toggle('active', tab === 'liked');
 
     if (tab === 'all') {
       images = [...masterImages];
@@ -292,6 +297,11 @@
         const name = (item.name || "").toLowerCase();
         return item.isVideo || name.endsWith('.mp4') || name.endsWith('.mov') || name.endsWith('.mkv') || name.endsWith('.avi');
       });
+    } else if (tab === 'liked') {
+      // Lọc các file có lượt tim > 0 và xếp lượng tim giảm dần (Nhiều nhất lên đầu)
+      images = masterImages
+        .filter(item => (item.likes || 0) > 0)
+        .sort((a, b) => (b.likes || 0) - (a.likes || 0));
     }
 
     updateFileCountText();
@@ -305,7 +315,10 @@
       document.getElementById('main-iframe').classList.remove('visible');
       document.getElementById('main-iframe').src = "";
       
-      document.getElementById('thumb-strip').innerHTML = '<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-regular fa-folder-open"></i> Mục này hiện đang trống.</div>';
+      let emptyMsg = '<i class="fa-regular fa-folder-open"></i> Mục này hiện đang trống.';
+      if(tab === 'liked') emptyMsg = '<i class="fa-regular fa-heart"></i> Chưa có ảnh/video nào được thả tim. Hãy là người đầu tiên!';
+      
+      document.getElementById('thumb-strip').innerHTML = `<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;">${emptyMsg}</div>`;
       document.getElementById('img-counter').textContent = "0 / 0";
       document.getElementById('like-count').textContent = "0";
     }
@@ -316,6 +329,7 @@
     if (currentTab === 'all') textEl.textContent = images.length + ' tệp';
     else if (currentTab === 'images') textEl.textContent = images.length + ' hình ảnh';
     else if (currentTab === 'videos') textEl.textContent = images.length + ' video clip';
+    else if (currentTab === 'liked') textEl.textContent = images.length + ' khoảnh khắc yêu thích';
   }
 
   function buildThumbs() {
@@ -325,6 +339,7 @@
     images.forEach((img, i) => {
       const wrapper = document.createElement('div');
       wrapper.className = 'thumb-item';
+      if (currentTab === 'liked') wrapper.classList.add('tab-danger-active');
       wrapper.dataset.idx = i;
       wrapper.onclick = () => { stopSlideshow(); showImage(i); };
       
@@ -486,6 +501,22 @@
     localStorage.setItem('mira_liked', JSON.stringify(likedList));
     
     buildThumbs();
+
+    // Nếu đang ở tab Liked, cập nhật và sắp xếp lại danh sách thời gian thực
+    if (currentTab === 'liked') {
+      images = masterImages
+        .filter(item => (item.likes || 0) > 0)
+        .sort((a, b) => (b.likes || 0) - (a.likes || 0));
+      updateFileCountText();
+      buildThumbs();
+      // Giữ tiêu điểm tại ảnh vừa like
+      const newIdx = images.findIndex(item => item.id === img.id);
+      if (newIdx !== -1) {
+        current = newIdx;
+        document.querySelectorAll('.thumb-item').forEach((t, i) => t.classList.toggle('active', i === current));
+        document.getElementById('img-counter').innerHTML = `<i class="fa-regular fa-images"></i> ${current + 1} / ${images.length}`;
+      }
+    }
 
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
