@@ -227,7 +227,9 @@
     current = idx;
     const img = images[idx];
     const mainImg = document.getElementById('main-img');
-    const displayUrl = img.thumbnailLink; // Lấy trực tiếp link ảnh chất lượng cao từ Drive
+    
+    // SỬA DÒNG NÀY: Tự động đổi kích thước ảnh từ w220 thành w1600 để hiển thị ảnh chính cực nét
+    const displayUrl = img.thumbnailLink.replace('sz=w220', 'sz=w1600');
 
     mainImg.classList.add('loading');
     mainImg.src = displayUrl;
@@ -238,14 +240,12 @@
     document.getElementById('img-counter').textContent = `${idx + 1} / ${images.length}`;
     document.getElementById('like-count').textContent = img.likes || 0;
 
-    // Reset trạng thái nút tim dựa trên LocalStorage cá nhân
+    // Các đoạn code LocalStorage và active thumb bên dưới giữ nguyên...
     const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
     document.getElementById('like-btn').classList.toggle('liked', likedList.includes(img.id));
-
     document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
     const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
     const p = new URLSearchParams(location.search);
     p.set('i', idx);
     history.replaceState({}, '', '?' + p.toString());
