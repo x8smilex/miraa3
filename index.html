@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Album Ảnh Lớp Tổng Kết Cuối Năm MIRA A3</title>
+<title>Album Ảnh & Video Lớp MIRA A3</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -51,7 +51,7 @@
   .wish-form button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); opacity: 0.95; }
 
   .wishes-ticker-container { flex: 1; overflow: hidden; position: relative; border: 1px solid var(--border); border-radius: 12px; background: rgba(0,0,0,0.4); }
-  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 15px; animation: ticker 35s linear infinite; }
+  .wishes-ticker { display: flex; flex-direction: column; gap: 12px; position: absolute; width: 100%; padding: 15px; animation: ticker 25s linear infinite; }
   .wishes-ticker:hover { animation-play-state: paused; }
   @keyframes ticker { 0% { top: 100%; transform: translateY(0); } 100% { top: 0%; transform: translateY(-100%); } }
   
@@ -59,35 +59,48 @@
   .wish-name { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
   .wish-text { font-size: 13px; color: #d1cdc7; line-height: 1.5; }
 
-  /* CỘT PHẢI: KHU VỰC ẢNH CHÍNH */
+  /* CỘT PHẢI: KHU VỰC ẢNH & VIDEO CHÍNH */
   .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1.5rem; overflow: hidden; background: #050505; }
-  .main-img-wrap { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border-radius: 8px; }
-  #main-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: opacity 0.3s ease; cursor: zoom-in; display: block; border: 1px solid rgba(255,255,255,0.03); }
+  .main-img-wrap { position: relative; width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border-radius: 8px; }
+  
+  #main-img, #main-video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: opacity 0.3s ease; display: none; border: 1px solid rgba(255,255,255,0.03); }
+  #main-img.visible, #main-video.visible { display: block; }
   #main-img.loading { opacity: 0; }
   
   .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(20,20,20,0.5); border: 1px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; z-index: 10; backdrop-filter: blur(12px); transition: all 0.3s; }
   .nav-btn:hover { background: var(--accent); color: #0a0a0a; border-color: var(--accent); transform: translateY(-50%) scale(1.05); box-shadow: 0 0 15px rgba(201,169,110,0.4); }
   .nav-btn.prev { left: 1.5rem; } .nav-btn.next { right: 1.5rem; }
   
-  .ss-progress-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 3s linear; border-radius: 0 0 8px 8px; }
-  .img-counter { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text); font-weight: 400; background: rgba(20,20,20,0.7); border: 1px solid var(--border); padding: 6px 16px; border-radius: 30px; pointer-events: none; backdrop-filter: blur(12px); letter-spacing: 0.05em; }
+  .ss-progress-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 3s linear; border-radius: 0 0 8px 8px; z-index: 12; }
+  .img-counter { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text); font-weight: 400; background: rgba(20,20,20,0.7); border: 1px solid var(--border); padding: 6px 16px; border-radius: 30px; pointer-events: none; backdrop-filter: blur(12px); letter-spacing: 0.05em; z-index: 11; }
   
-  /* 🛠️ NÂNG CẤP: HỆ THỐNG SLIDER CHO DANH SÁCH ẢNH NHỎ */
-  .thumb-slider-wrapper { flex-shrink: 0; display: flex; align-items: center; background: var(--surface); border-top: 1px solid var(--border); padding: 0 10px; position: relative; }
+  /* THANH TỔNG HỢP: SLIDER KHUNG THUMBNAIL */
+  .thumb-slider-wrapper { flex-shrink: 0; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--border); }
   
-  /* Nút bấm chuyển danh sách ảnh nhỏ */
+  /* 🛠️ CẤU HÌNH GIAO DIỆN THANH TAB MỚI */
+  .tabs-container { display: flex; gap: 10px; padding: 10px 20px 0 20px; background: rgba(0,0,0,0.2); }
+  .tab-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 16px; cursor: pointer; border-radius: 20px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; }
+  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .tab-btn.active { color: var(--accent); background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.2); font-weight: 500; }
+
+  .slider-main-row { display: flex; align-items: center; padding: 0 10px; width: 100%; }
   .thumb-nav-btn { background: rgba(255,255,255,0.02); border: 1px solid var(--border); color: var(--text); width: 36px; height: 75px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.3s; z-index: 5; }
   .thumb-nav-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 10px rgba(201,169,110,0.2); }
   
-  /* Thanh chứa ảnh khóa cứng 1 hàng duy nhất */
-  .thumb-strip { flex: 1; padding: 0.9rem 0.5rem; overflow-x: hidden; display: flex; gap: 10px; align-items: center; scroll-behavior: smooth; white-space: nowrap; }
-  /* Bật lại tính năng vuốt chạm mượt trên điện thoại */
+  .thumb-strip { flex: 1; padding: 0.7rem 0.5rem 0.9rem 0.5rem; overflow-x: hidden; display: flex; gap: 10px; align-items: center; scroll-behavior: smooth; white-space: nowrap; min-height: 110px; }
   @media (max-width: 768px) { .thumb-strip { overflow-x: auto; } .thumb-nav-btn { display: none; } }
 
-  .thumb { flex-shrink: 0; width: var(--thumb-size); height: var(--thumb-size); border-radius: 8px; object-fit: cover; cursor: pointer; border: 2px solid transparent; transition: all 0.25s; opacity: 0.35; display: inline-block; }
-  .thumb:hover { opacity: 0.7; }
-  .thumb.active { border-color: var(--accent); opacity: 1; transform: translateY(-4px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); }
+  .thumb-item { flex-shrink: 0; position: relative; width: var(--thumb-size); height: var(--thumb-size); cursor: pointer; }
+  .thumb { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; border: 2px solid transparent; transition: all 0.25s; opacity: 0.35; }
+  .thumb-item:hover .thumb { opacity: 0.7; }
+  .thumb-item.active .thumb { border-color: var(--accent); opacity: 1; transform: translateY(-4px); box-shadow: 0 4px 12px rgba(201,169,110,0.3); }
   
+  .video-badge { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 0.5px solid rgba(255,255,255,0.2); z-index: 2; }
+  
+  /* Huy hiệu hiện số tim đè lên ảnh nhỏ khi lọt vào top trending */
+  .thumb-like-badge { position: absolute; top: -5px; left: 5px; background: var(--danger); color: #fff; font-size: 9px; font-weight: 500; padding: 1px 6px; border-radius: 10px; display: flex; align-items: center; gap: 3px; border: 0.5px solid rgba(255,255,255,0.2); z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.4); animation: popIn 0.3s ease; }
+  @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
   /* LOADING SCREEN */
   #loading { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; }
   #loading.hidden { display: none; }
@@ -97,7 +110,7 @@
   #error-msg { display: none; position: fixed; inset: 0; z-index: 300; background: var(--bg); align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; }
   #error-msg.show { display: flex; }
 
-  /* LIGHTBOX */
+  /* LIGHTBOX PHÓNG TO */
   #lightbox { position: fixed; inset: 0; z-index: 500; background: rgba(5,5,5,0.98); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
   #lightbox.open { display: flex; } #lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; box-shadow: 0 10px 50px rgba(0,0,0,0.8); border-radius: 4px; }
   .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 40px; height: 40px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
@@ -110,6 +123,8 @@
     .main-container { flex-direction: column-reverse; }
     .wishes-column { width: 100%; height: 240px; padding: 1rem; border-right: none; border-top: 1px solid var(--border); }
     .wishes-ticker-container { height: 100px; }
+    .tabs-container { padding: 8px 10px 0 10px; gap: 5px; }
+    .tab-btn { font-size: 10px; padding: 4px 10px; }
     .img-counter { top: 1rem; bottom: auto; }
     :root { --thumb-size: 68px; }
     .nav-btn { width: 38px; height: 38px; font-size: 14px; }
@@ -121,7 +136,7 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.15em;">ĐANG TẢI ALBUM & LỜI CHÚC MIRA A3...</p>
+  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.15em;">ĐANG TẢI ALBUM ĐA PHƯƠNG TIỆN...</p>
 </div>
 
 <div id="error-msg">
@@ -133,13 +148,13 @@
   <div class="album-header">
     <div class="album-title-wrap">
       <span class="album-title">KỶ NIỆM CUỐI NĂM - MIRA A3</span>
-      <span class="album-count" id="album-count">0 ảnh</span>
+      <span class="album-count" id="album-count">0 tệp</span>
     </div>
     
     <div class="action-group">
       <button class="btn-ui slideshow-btn" id="slideshow-btn" onclick="toggleSlideshow()"><i class="fa-solid fa-play"></i> Tự Động Chạy</button>
       <button class="btn-ui like-btn" id="like-btn" onclick="likeImage()"><i class="fa-regular fa-heart"></i> Thả Tim (<span id="like-count">0</span>)</button>
-      <a id="dl-btn" class="btn-ui dl-btn" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> Tải Ảnh Gốc</a>
+      <a id="dl-btn" class="btn-ui dl-btn" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> Tải Bản Gốc</a>
     </div>
   </div>
 
@@ -158,8 +173,9 @@
 
     <div class="viewer-area" id="viewer-area">
       <button class="nav-btn prev" onclick="prevImg()"><i class="fa-solid fa-chevron-left"></i></button>
-      <div class="main-img-wrap" style="width:100%; height:100%">
+      <div class="main-img-wrap">
         <img id="main-img" src="" alt="Ảnh chính" onclick="openLightbox()" />
+        <video id="main-video" controls playsinline src=""></video>
         <div class="ss-progress-bar" id="ss-progress-bar"></div>
       </div>
       <button class="nav-btn next" onclick="nextImg()"><i class="fa-solid fa-chevron-right"></i></button>
@@ -169,9 +185,16 @@
   </div>
 
   <div class="thumb-slider-wrapper">
-    <button class="thumb-nav-btn" onclick="scrollThumbstrip('left')"><i class="fa-solid fa-angle-left"></i></button>
-    <div class="thumb-strip" id="thumb-strip"></div>
-    <button class="thumb-nav-btn" onclick="scrollThumbstrip('right')"><i class="fa-solid fa-angle-right"></i></button>
+    <div class="tabs-container">
+      <button class="tab-btn active" id="tab-all" onclick="switchTab('all')"><i class="fa-solid fa-images"></i> Tất cả khoảnh khắc</button>
+      <button class="tab-btn" id="tab-popular" onclick="switchTab('popular')"><i class="fa-solid fa-crown"></i> 🔥 Yêu thích nhất</button>
+    </div>
+    
+    <div class="slider-main-row">
+      <button class="thumb-nav-btn" onclick="scrollThumbstrip('left')"><i class="fa-solid fa-angle-left"></i></button>
+      <div class="thumb-strip" id="thumb-strip"></div>
+      <button class="thumb-nav-btn" onclick="scrollThumbstrip('right')"><i class="fa-solid fa-angle-right"></i></button>
+    </div>
   </div>
 </div>
 
@@ -181,10 +204,12 @@
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVQsvpnUH3FzKlfjssfrrBeK87WJyTvD4jZwJWqmrQI9V8s7NsR9f6ADQif8jtC4fD/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-SMcpFxo-wyojXVXb4_HVSS6Q0ilRVcGSynjjvaCv2_7rCAqrlwNiHc_7Q0WF_fNU/exec";
 
-  let images = [];
+  let masterImages = []; // Lưu trữ mảng gốc của Drive
+  let images = [];       // Mảng hiển thị thực tế theo tab lọc
   let current = 0;
+  let currentTab = 'all'; // 'all' hoặc 'popular'
   
   let slideshowInterval = null;
   const SLIDESHOW_SPEED = 3000; 
@@ -199,10 +224,12 @@
       const data = await res.json();
       if (data.error) throw new Error(data.error);
 
-      images = data.files || [];
+      masterImages = data.files || [];
+      images = [...masterImages]; // Mặc định ban đầu nạp hết ảnh
+      
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('album').classList.add('visible');
-      document.getElementById('album-count').textContent = images.length + ' ảnh';
+      document.getElementById('album-count').textContent = images.length + ' tệp';
 
       buildThumbs();
       renderWishes(data.wishes || []);
@@ -219,7 +246,7 @@
 
   function renderWishes(wishes) {
     const ticker = document.getElementById('wishes-ticker');
-    ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text"><i class="fa-solid fa-pen-fancy"></i> Hãy gửi lời chúc đầu tiên lưu giữ kỷ niệm lớp mình nhé!</p></div>' : '';
+    ticker.innerHTML = wishes.length === 0 ? '<div class="wish-card"><p class="wish-text"><i class="fa-solid fa-pen-fancy"></i> Hãy gửi lời chúc đầu tiên nhé!</p></div>' : '';
     
     wishes.forEach(w => {
       const card = document.createElement('div');
@@ -229,72 +256,135 @@
     });
   }
 
+  /* 🛠️ LOGIC BỘ LỌC TABS TÌM FILE ĐƯỢC LIKE NHIỀU NHẤT */
+  function switchTab(tab) {
+    if (currentTab === tab) return;
+    currentTab = tab;
+    stopSlideshow();
+
+    document.getElementById('tab-all').classList.toggle('active', tab === 'all');
+    document.getElementById('tab-popular').classList.toggle('active', tab === 'popular');
+
+    if (tab === 'all') {
+      images = [...masterImages]; // Khôi phục mảng gốc từ A-Z
+    } else {
+      // Lọc ra các file có like > 0 và xếp từ nhiều tim nhất đến ít tim nhất
+      images = masterImages
+        .filter(img => (img.likes || 0) > 0)
+        .sort((a, b) => b.likes - a.likes);
+    }
+
+    buildThumbs();
+
+    // Reset hiển thị về ảnh đầu tiên của danh sách lọc mới
+    if (images.length > 0) {
+      showImage(0);
+    } else {
+      // Trường hợp tab yêu thích trống rỗng chưa ai thả tim
+      document.getElementById('main-img').classList.remove('visible');
+      document.getElementById('main-video').classList.remove('visible');
+      document.getElementById('thumb-strip').innerHTML = '<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-regular fa-heart"></i> Chưa có bức ảnh nào được thả tim. Hãy xem tab Tất cả và thả tim nhé!</div>';
+      document.getElementById('img-counter').textContent = "0 / 0";
+      document.getElementById('like-count').textContent = "0";
+    }
+  }
+
   function buildThumbs() {
     const strip = document.getElementById('thumb-strip');
     strip.innerHTML = '';
+    
     images.forEach((img, i) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'thumb-item';
+      wrapper.dataset.idx = i;
+      wrapper.onclick = () => { stopSlideshow(); showImage(i); };
+      
       const el = document.createElement('img');
       el.className = 'thumb';
       el.src = img.thumbnailLink;
       el.alt = img.name;
       el.loading = 'lazy';
-      el.onclick = () => { stopSlideshow(); showImage(i); };
-      el.dataset.idx = i;
-      strip.appendChild(el);
+      wrapper.appendChild(el);
+      
+      if (img.isVideo) {
+        const badge = document.createElement('div');
+        badge.className = 'video-badge';
+        badge.innerHTML = '<i class="fa-solid fa-play"></i>';
+        wrapper.appendChild(badge);
+      }
+      
+      // Nếu có số tim > 0, hiển thị huy hiệu đếm tim nhỏ lên đầu góc ảnh nhỏ
+      if ((img.likes || 0) > 0) {
+        const likeBadge = document.createElement('div');
+        likeBadge.className = 'thumb-like-badge';
+        likeBadge.innerHTML = `<i class="fa-solid fa-heart"></i> ${img.likes}`;
+        wrapper.appendChild(likeBadge);
+      }
+      
+      strip.appendChild(wrapper);
     });
   }
 
-  /* 🛠️ LOGIC CUỘN MƯỢT DANH SÁCH ẢNH NHỎ KHI BẤM NÚT TRÁI / PHẢI */
   function scrollThumbstrip(direction) {
     const strip = document.getElementById('thumb-strip');
-    // Tính toán khoảng cách cuộn bằng 80% chiều rộng hiển thị thực tế của khung nhìn
     const scrollAmount = strip.clientWidth * 0.8; 
-    
-    if (direction === 'left') {
-      strip.scrollLeft -= scrollAmount;
-    } else {
-      strip.scrollLeft += scrollAmount;
-    }
+    if (direction === 'left') { strip.scrollLeft -= scrollAmount; } else { strip.scrollLeft += scrollAmount; }
   }
 
   function showImage(idx) {
     if(!images.length) return;
     current = idx;
-    const img = images[idx];
+    const item = images[idx];
+    
     const mainImg = document.getElementById('main-img');
-    const displayUrl = img.thumbnailLink.replace('sz=w220', 'sz=w1600');
+    const mainVideo = document.getElementById('main-video');
+    
+    mainVideo.pause();
+    mainVideo.src = "";
 
-    mainImg.classList.add('loading');
-    mainImg.src = displayUrl;
-    mainImg.onload = () => {
-      mainImg.classList.remove('loading');
-      if (slideshowInterval) {
-        resetProgressBar();
-      }
-    };
+    if (item.isVideo) {
+      mainImg.classList.remove('visible');
+      mainVideo.classList.add('visible');
+      mainVideo.src = item.webContentLink;
+      if (slideshowInterval) stopSlideshow();
+    } else {
+      mainVideo.classList.remove('visible');
+      mainImg.classList.add('visible');
+      
+      const displayUrl = item.thumbnailLink.replace('sz=w220', 'sz=w1600');
+      mainImg.classList.add('loading');
+      mainImg.src = displayUrl;
+      mainImg.onload = () => {
+        mainImg.classList.remove('loading');
+        if (slideshowInterval) resetProgressBar();
+      };
+      document.getElementById('lightbox-img').src = displayUrl;
+    }
 
-    document.getElementById('lightbox-img').src = displayUrl;
-    document.getElementById('dl-btn').href = img.webContentLink;
+    document.getElementById('dl-btn').href = item.webContentLink;
     document.getElementById('img-counter').innerHTML = `<i class="fa-regular fa-images"></i> ${idx + 1} / ${images.length}`;
-    document.getElementById('like-count').textContent = img.likes || 0;
+    document.getElementById('like-count').textContent = item.likes || 0;
 
     const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
     const likeBtn = document.getElementById('like-btn');
-    if (likedList.includes(img.id)) {
+    if (likedList.includes(item.id)) {
       likeBtn.classList.add('liked');
-      likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i> Đã Thả Tim (<span id="like-count">${img.likes}</span>)`;
+      likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i> Đã Thả Tim (<span id="like-count">${item.likes}</span>)`;
     } else {
       likeBtn.classList.remove('liked');
-      likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> Thả Tim (<span id="like-count">${img.likes}</span>)`;
+      likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> Thả Tim (<span id="like-count">${item.likes}</span>)`;
     }
 
-    document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
-    const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
+    document.querySelectorAll('.thumb-item').forEach((t, i) => t.classList.toggle('active', i === idx));
+    const activeThumb = document.querySelector(`.thumb-item[data-idx="${idx}"]`);
     if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
-    const p = new URLSearchParams(location.search);
-    p.set('i', idx);
-    history.replaceState({}, '', '?' + p.toString());
+    // Chỉ thay đổi tham số URL `?i=` nếu đang xem ở tab Tất cả để tránh lỗi lệch index mảng
+    if (currentTab === 'all') {
+      const p = new URLSearchParams(location.search);
+      p.set('i', idx);
+      history.replaceState({}, '', '?' + p.toString());
+    }
   }
 
   function toggleSlideshow() {
@@ -302,21 +392,20 @@
     if (slideshowInterval) {
       stopSlideshow();
     } else {
+      if (images[current] && images[current].isVideo) {
+        alert("Không thể bật Tự động chạy khi đang xem Video.");
+        return;
+      }
       btn.classList.add('playing');
       btn.innerHTML = `<i class="fa-solid fa-pause"></i> Dừng Chạy`;
       resetProgressBar();
-      slideshowInterval = setInterval(() => {
-        nextImg();
-      }, SLIDESHOW_SPEED);
+      slideshowInterval = setInterval(() => { nextImg(); }, SLIDESHOW_SPEED);
     }
   }
 
   function stopSlideshow() {
     const btn = document.getElementById('slideshow-btn');
-    if (slideshowInterval) {
-      clearInterval(slideshowInterval);
-      slideshowInterval = null;
-    }
+    if (slideshowInterval) { clearInterval(slideshowInterval); slideshowInterval = null; }
     btn.classList.remove('playing');
     btn.innerHTML = `<i class="fa-solid fa-play"></i> Tự Động Chạy`;
     document.getElementById('ss-progress-bar').style.transition = 'none';
@@ -325,8 +414,7 @@
 
   function resetProgressBar() {
     const bar = document.getElementById('ss-progress-bar');
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
+    bar.style.transition = 'none'; bar.style.width = '0%';
     setTimeout(() => {
       bar.style.transition = `width ${SLIDESHOW_SPEED}ms linear`;
       bar.style.width = '100%';
@@ -337,18 +425,24 @@
     if (!images.length) return;
     const img = images[current];
     const likedList = JSON.parse(localStorage.getItem('mira_liked') || '[]');
-    
     if (likedList.includes(img.id)) return;
 
     img.likes = (img.likes || 0) + 1;
     document.getElementById('like-count').textContent = img.likes;
     
+    // Tìm và cập nhật lại số tim trên mảng gốc tổng master tương ứng
+    const masterMatch = masterImages.find(m => m.id === img.id);
+    if (masterMatch) masterMatch.likes = img.likes;
+
     const likeBtn = document.getElementById('like-btn');
     likeBtn.classList.add('liked');
     likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i> Đã Thả Tim (<span id="like-count">${img.likes}</span>)`;
     
     likedList.push(img.id);
     localStorage.setItem('mira_liked', JSON.stringify(likedList));
+    
+    // Tái dựng lại huy hiệu tim trên ảnh nhỏ mà không cần chuyển trang
+    buildThumbs();
 
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -363,7 +457,6 @@
     const nameInput = document.getElementById('wish-name');
     const msgInput = document.getElementById('wish-msg');
     const btn = document.getElementById('wish-submit');
-    
     const name = nameInput.value.trim();
     const message = msgInput.value.trim();
     if(!name || !message) return;
@@ -384,7 +477,6 @@
       card.className = 'wish-card';
       card.innerHTML = `<div class="wish-name"><i class="fa-regular fa-user"></i> ${escapeHtml(name)}</div><div class="wish-text">${escapeHtml(message)}</div>`;
       ticker.insertBefore(card, ticker.firstChild);
-
       msgInput.value = '';
       alert("Gửi lời chúc thành công! Cảm ơn bạn rất nhiều. ❤️");
     } catch (err) {
@@ -397,7 +489,12 @@
 
   function prevImg() { if (images.length) showImage((current - 1 + images.length) % images.length); }
   function nextImg() { if (images.length) showImage((current + 1) % images.length); }
-  function openLightbox() { stopSlideshow(); document.getElementById('lightbox').classList.add('open'); }
+  function openLightbox() { 
+    if (images[current] && images[current].isVideo) return; 
+    stopSlideshow(); 
+    document.getElementById('lightbox').open = true;
+    document.getElementById('lightbox').classList.add('open'); 
+  }
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
   function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
@@ -418,10 +515,7 @@
   viewer && viewer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   viewer && viewer.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) {
-      stopSlideshow();
-      dx < 0 ? nextImg() : prevImg();
-    }
+    if (Math.abs(dx) > 50) { stopSlideshow(); dx < 0 ? nextImg() : prevImg(); }
   }, { passive: true });
 </script>
 </body>
