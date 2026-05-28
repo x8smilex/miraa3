@@ -63,8 +63,8 @@
   .viewer-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 1.5rem; overflow: hidden; background: #050505; }
   .main-img-wrap { position: relative; width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border-radius: 8px; }
   
-  #main-img, #main-video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: opacity 0.3s ease; display: none; border: 1px solid rgba(255,255,255,0.03); }
-  #main-img.visible, #main-video.visible { display: block; }
+  #main-img, #main-video, #main-iframe { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: opacity 0.3s ease; display: none; border: 1px solid rgba(255,255,255,0.03); }
+  #main-img.visible, #main-video.visible, #main-iframe.visible { display: block; }
   #main-img.loading { opacity: 0; }
   
   .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(20,20,20,0.5); border: 1px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; z-index: 10; backdrop-filter: blur(12px); transition: all 0.3s; }
@@ -122,8 +122,8 @@
     .main-container { flex-direction: column-reverse; }
     .wishes-column { width: 100%; height: 240px; padding: 1rem; border-right: none; border-top: 1px solid var(--border); }
     .wishes-ticker-container { height: 100px; }
-    .tabs-container { padding: 8px 10px 0 10px; gap: 5px; }
-    .tab-btn { font-size: 10px; padding: 4px 10px; }
+    .tabs-container { padding: 8px 10px 0 10px; gap: 5px; white-space: nowrap; overflow-x: auto; }
+    .tab-btn { font-size: 10px; padding: 4px 12px; }
     .img-counter { top: 1rem; bottom: auto; }
     :root { --thumb-size: 68px; }
     .nav-btn { width: 38px; height: 38px; font-size: 14px; }
@@ -175,6 +175,7 @@
       <div class="main-img-wrap">
         <img id="main-img" src="" alt="Ảnh chính" onclick="openLightbox()" />
         <video id="main-video" controls playsinline src=""></video>
+        <iframe id="main-iframe" allow="autoplay; encrypted-media" allowfullscreen="true" style="width: 100%; height: 100%; border: none; border-radius: 8px;"></iframe>
         <div class="ss-progress-bar" id="ss-progress-bar"></div>
       </div>
       <button class="nav-btn next" onclick="nextImg()"><i class="fa-solid fa-chevron-right"></i></button>
@@ -185,8 +186,9 @@
 
   <div class="thumb-slider-wrapper">
     <div class="tabs-container">
-      <button class="tab-btn active" id="tab-all" onclick="switchTab('all')"><i class="fa-solid fa-images"></i> Tất cả khoảnh khắc</button>
-      <button class="tab-btn" id="tab-popular" onclick="switchTab('popular')"><i class="fa-solid fa-crown"></i> 🔥 Yêu thích nhất</button>
+      <button class="tab-btn active" id="tab-all" onclick="switchTab('all')"><i class="fa-solid fa-layer-group"></i> Tất cả khoảnh khắc</button>
+      <button class="tab-btn" id="tab-images" onclick="switchTab('images')"><i class="fa-solid fa-image"></i> Hình ảnh lớp</button>
+      <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')"><i class="fa-solid fa-video"></i> Video Clip</button>
     </div>
     
     <div class="slider-main-row">
@@ -203,7 +205,7 @@
 </div>
 
 <script>
-  // 🔴 ĐIỀN ĐƯỜNG LINK WEB APP APPS SCRIPT CHUẨN CỦA BẠN VÀO ĐÂY:
+  // 🔴 ĐÃ CẬP NHẬT ĐƯỜNG LINK WEB APP APPS SCRIPT MỚI CỦA BẠN VÀO ĐÂY:
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1JoIYMhXRxZB60HyIqSrnCzk54F0-ORbVrDSjRetoru6eW0FhmXyWswdIVpb7223l/exec";
 
   let masterImages = []; 
@@ -219,7 +221,6 @@
   };
 
   function loadAlbumData() {
-    // Tạo tên hàm callback ngẫu nhiên để hứng dữ liệu trả về từ Google vượt tường lửa CORS
     const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
     
     window[callbackName] = function(data) {
@@ -238,7 +239,7 @@
       
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('album').classList.add('visible');
-      document.getElementById('album-count').textContent = images.length + ' tệp';
+      updateFileCountText();
 
       buildThumbs();
       renderWishes(data.wishes || []);
@@ -248,13 +249,12 @@
       showImage(Math.min(startIdx, images.length - 1));
     };
 
-    // Tạo thẻ script ngầm để load dữ liệu mượt mà không bị trình duyệt chặn CORS
     const script = document.createElement('script');
     script.src = `${APPS_SCRIPT_URL}?action=getData&callback=${callbackName}`;
     script.onerror = function() {
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('error-msg').classList.add('show');
-      document.getElementById('error-detail').textContent = "Lỗi kết nối mạng hoặc đường link Web App Apps Script không hợp lệ.";
+      document.getElementById('error-detail').textContent = "Lỗi kết nối mạng hoặc đường link Web App không hợp lệ.";
     };
     document.body.appendChild(script);
   }
@@ -277,16 +277,24 @@
     stopSlideshow();
 
     document.getElementById('tab-all').classList.toggle('active', tab === 'all');
-    document.getElementById('tab-popular').classList.toggle('active', tab === 'popular');
+    document.getElementById('tab-images').classList.toggle('active', tab === 'images');
+    document.getElementById('tab-videos').classList.toggle('active', tab === 'videos');
 
     if (tab === 'all') {
-      images = [...masterImages]; 
-    } else {
-      images = masterImages
-        .filter(img => (img.likes || 0) > 0)
-        .sort((a, b) => b.likes - a.likes);
+      images = [...masterImages];
+    } else if (tab === 'images') {
+      images = masterImages.filter(item => {
+        const name = (item.name || "").toLowerCase();
+        return !item.isVideo && !name.endsWith('.mp4') && !name.endsWith('.mov') && !name.endsWith('.mkv') && !name.endsWith('.avi');
+      });
+    } else if (tab === 'videos') {
+      images = masterImages.filter(item => {
+        const name = (item.name || "").toLowerCase();
+        return item.isVideo || name.endsWith('.mp4') || name.endsWith('.mov') || name.endsWith('.mkv') || name.endsWith('.avi');
+      });
     }
 
+    updateFileCountText();
     buildThumbs();
 
     if (images.length > 0) {
@@ -294,13 +302,20 @@
     } else {
       document.getElementById('main-img').classList.remove('visible');
       document.getElementById('main-video').classList.remove('visible');
-      const iframe = document.getElementById('main-iframe');
-      if (iframe) iframe.style.display = 'none';
+      document.getElementById('main-iframe').classList.remove('visible');
+      document.getElementById('main-iframe').src = "";
       
-      document.getElementById('thumb-strip').innerHTML = '<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-regular fa-heart"></i> Chưa có bức ảnh nào được thả tim. Hãy xem tab Tất cả và thả tim nhé!</div>';
+      document.getElementById('thumb-strip').innerHTML = '<div style="color:var(--muted); font-size:13px; padding:20px; width:100%; text-align:center;"><i class="fa-regular fa-folder-open"></i> Mục này hiện đang trống.</div>';
       document.getElementById('img-counter').textContent = "0 / 0";
       document.getElementById('like-count').textContent = "0";
     }
+  }
+
+  function updateFileCountText() {
+    const textEl = document.getElementById('album-count');
+    if (currentTab === 'all') textEl.textContent = images.length + ' tệp';
+    else if (currentTab === 'images') textEl.textContent = images.length + ' hình ảnh';
+    else if (currentTab === 'videos') textEl.textContent = images.length + ' video clip';
   }
 
   function buildThumbs() {
@@ -320,7 +335,10 @@
       el.loading = 'lazy';
       wrapper.appendChild(el);
       
-      if (img.isVideo) {
+      const fileName = (img.name || "").toLowerCase();
+      const isVideo = img.isVideo || fileName.endsWith('.mp4') || fileName.endsWith('.mov') || fileName.endsWith('.mkv') || fileName.endsWith('.avi');
+      
+      if (isVideo) {
         const badge = document.createElement('div');
         badge.className = 'video-badge';
         badge.innerHTML = '<i class="fa-solid fa-play"></i>';
@@ -351,10 +369,11 @@
     
     const mainImg = document.getElementById('main-img');
     const mainVideo = document.getElementById('main-video');
-    const iframe = document.getElementById('main-iframe');
+    const mainIframe = document.getElementById('main-iframe');
     
     mainVideo.pause();
     mainVideo.src = "";
+    mainIframe.src = "";
 
     const fileName = (item.name || "").toLowerCase();
     const isVideoFile = item.isVideo || 
@@ -366,28 +385,13 @@
     if (isVideoFile) {
       mainImg.classList.remove('visible');
       mainVideo.classList.remove('visible'); 
+      mainIframe.classList.add('visible');
       
-      let targetIframe = iframe;
-      if (!targetIframe) {
-        targetIframe = document.createElement('iframe');
-        targetIframe.id = 'main-iframe';
-        targetIframe.style.width = '100%';
-        targetIframe.style.height = '100%';
-        targetIframe.style.border = 'none';
-        targetIframe.style.borderRadius = '8px';
-        targetIframe.setAttribute('allow', 'autoplay; encrypted-media');
-        targetIframe.setAttribute('allowfullscreen', 'true');
-        document.querySelector('.main-img-wrap').appendChild(targetIframe);
-      }
-      targetIframe.style.display = 'block';
-      targetIframe.src = "https://drive.google.com/file/d/" + item.id + "/preview";
-      
+      mainIframe.src = "https://drive.google.com/file/d/" + item.id + "/preview";
       if (slideshowInterval) stopSlideshow();
       
     } else {
-      const activeIframe = document.getElementById('main-iframe');
-      if (activeIframe) activeIframe.style.display = 'none';
-      
+      mainIframe.classList.remove('visible');
       mainVideo.classList.remove('visible');
       mainImg.classList.add('visible');
       
