@@ -1,186 +1,188 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mira Album & Lời Chúc</title>
-    <!-- Thư viện hiển thị biểu tượng Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 0;
-            background-color: #f7f9fc; color: #333;
-        }
-
-        /* 1. Thanh điều hướng trên đầu */
-        .top-navbar {
-            background-color: #ffffff;
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: center;
-            width: 100%;
-        }
-        .top-navbar a {
-            text-decoration: none;
-            color: #d81b60; font-weight: bold; font-size: 15px;
-            padding: 10px 20px;
-            border: 2px solid #d81b60; border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        .top-navbar a:hover {
-            background-color: #d81b60; color: #fff;
-        }
-
-        /* 2. Thanh bộ lọc chứa icon */
-        .filter-container {
-            max-width: 1200px; margin: 25px auto; padding: 15px;
-            background: #fff; border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            text-align: center;
-        }
-        .filter-section {
-            margin: 10px 15px; display: inline-block;
-        }
-        .filter-section label {
-            font-weight: 600; margin-right: 8px; font-size: 14px;
-        }
-        .filter-section select {
-            padding: 8px 16px; border-radius: 6px;
-            border: 1px solid #ddd; outline: none; background-color: #fff;
-        }
-
-        /* 3. Bố cục chính 2 Cột */
-        .main-wrapper {
-            display: table; width: 100%; max-width: 1200px;
-            margin: 0 auto 40px auto; background: #fff;
-            border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-        .main-row { display: table-row; }
-        
-        /* Cột Trái: Lời chúc tự động chạy lên */
-        .wishes-column {
-            display: table-cell; width: 35%; vertical-align: top;
-            background-color: #fff8f9; border-right: 1px solid #ffe4e8;
-            padding: 25px; position: relative;
-        }
-        .wishes-title {
-            font-size: 17px; color: #c2185b; font-weight: bold;
-            margin-bottom: 20px; border-bottom: 2px solid #ffe4e8;
-            padding-bottom: 10px;
-        }
-        .wishes-marquee-container {
-            height: 450px; overflow: hidden; position: relative;
-        }
-        .wishes-list {
-            position: absolute; width: 100%;
-            animation: scrollWishesVertical 25s linear infinite;
-        }
-        .wishes-marquee-container:hover .wishes-list {
-            animation-play-state: paused; /* Di chuột vào sẽ dừng chạy chữ */
-        }
-        .wish-item {
-            background: #ffffff; padding: 15px; margin-bottom: 15px;
-            border-radius: 8px; box-shadow: 0 2px 8px rgba(216, 27, 96, 0.05);
-            border-left: 4px solid #d81b60;
-        }
-        .wish-user { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #222; }
-        .wish-text { font-size: 13px; color: #555; line-height: 1.5; }
-
-        /* Cột Phải: Khung hiển thị ảnh to */
-        .image-column {
-            display: table-cell; width: 65%; vertical-align: middle;
-            text-align: center; background: #fcfcfc; padding: 25px;
-            height: 520px;
-        }
-        .main-image-display {
-            max-width: 100%; max-height: 470px; object-fit: contain;
-            border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            background-color: #f0f0f0; display: none;
-        }
-        .no-image-placeholder { color: #999; font-style: italic; font-size: 14px; }
-
-        /* Hiệu ứng mượt mà dịch chuyển chữ lên trên */
-        @keyframes scrollWishesVertical {
-            0% { top: 100%; transform: translateY(0); }
-            100% { top: 0%; transform: translateY(-100%); }
-        }
-
-        /* Giao diện tương thích Mobile/Tablet */
-        @media (max-width: 768px) {
-            .main-wrapper, .main-row { display: block; }
-            .wishes-column, .image-column { display: block; width: 100%; }
-            .wishes-column { border-right: none; border-bottom: 1px solid #ffe4e8; height: 280px; }
-            .wishes-marquee-container { height: 200px; }
-            .image-column { height: auto; padding: 15px; }
-            .main-image-display { max-height: 350px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album Ảnh Lớp Tổng Kết Cuối Năm MIRA A3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d0d0d; --surface: #161616; --border: rgba(255,255,255,0.08);
+    --text: #e8e4dd; --muted: rgba(232,228,221,0.45); --accent: #c9a96e; --thumb-size: 88px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+  #album { display: none; flex-direction: column; height: 100vh; }
+  #album.visible { display: flex; }
+  .album-header { padding: 1.2rem 2rem; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .album-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; letter-spacing: 0.06em; }
+  .album-count { font-size: 13px; color: var(--muted); }
+  .viewer-area { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 1rem; overflow: hidden; }
+  .main-img-wrap { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+  #main-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; transition: opacity 0.25s ease; cursor: zoom-in; display: block; }
+  #main-img.loading { opacity: 0; }
+  .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 10; backdrop-filter: blur(8px); }
+  .nav-btn:hover { background: rgba(201,169,110,0.15); border-color: var(--accent); }
+  .nav-btn.prev { left: 0.5rem; } .nav-btn.next { right: 0.5rem; }
+  .dl-btn { position: absolute; top: 0.5rem; right: 0.5rem; padding: 6px 14px; background: rgba(13,13,13,0.7); border: 0.5px solid var(--border); border-radius: 20px; color: var(--text); font-size: 12px; cursor: pointer; text-decoration: none; backdrop-filter: blur(8px); }
+  .dl-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .img-counter { position: absolute; bottom: 0.5rem; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); background: rgba(13,13,13,0.6); padding: 4px 12px; border-radius: 20px; pointer-events: none; }
+  #lightbox { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lightbox.open { display: flex; } #lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; }
+  .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 36px; height: 36px; background: rgba(255,255,255,0.08); border: none; border-radius: 50%; color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .thumb-strip { flex-shrink: 0; padding: 0.75rem 1rem; border-top: 0.5px solid var(--border); background: var(--surface); overflow-x: auto; display: flex; gap: 8px; align-items: center; scroll-behavior: smooth; }
+  .thumb { flex-shrink: 0; width: var(--thumb-size); height: var(--thumb-size); border-radius: 6px; object-fit: cover; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s; opacity: 0.5; }
+  .thumb.active { border-color: var(--accent); opacity: 1; transform: translateY(-3px); }
+  #loading { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+  #loading.hidden { display: none; }
+  .spinner { width: 36px; height: 36px; border: 1.5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #error-msg { display: none; position: fixed; inset: 0; z-index: 300; background: var(--bg); align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; }
+  #error-msg.show { display: flex; }
+  @media (max-width: 600px) { :root { --thumb-size: 70px; } .nav-btn { width: 36px; height: 36px; } }
+</style>
 </head>
 <body>
 
-    <!-- Link trên đầu: Gửi lời chúc -->
-    <div class="top-navbar">
-        <a href="https://forms.google.com" target="_blank">
-            <i class="fa-solid fa-paper-plane"></i> Gửi lời chúc đến Album của chúng tôi
-        </a>
+<div id="loading">
+  <div class="spinner"></div>
+  <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.1em;">ĐANG TẢI ALBUM ẢNH LỚP...</p>
+</div>
+
+<div id="error-msg">
+  <h2 style="font-family: 'Cormorant Garamond', serif; font-weight:300;">Không thể tải ảnh</h2>
+  <p id="error-detail" style="color: var(--muted); font-size: 14px;">Vui lòng kiểm tra cấu hình Backend Apps Script.</p>
+</div>
+
+<div id="album">
+  <div class="album-header">
+    <span class="album-title">KỶ NIỆM CUỐI NĂM</span>
+    <span class="album-count" id="album-count">0 ảnh</span>
+  </div>
+
+  <div class="viewer-area" id="viewer-area">
+    <button class="nav-btn prev" onclick="prevImg()">&#8592;</button>
+    <div class="main-img-wrap" style="width:100%; height:100%">
+      <img id="main-img" src="" alt="Ảnh chính" onclick="openLightbox()" />
     </div>
+    <button class="nav-btn next" onclick="nextImg()">&#8594;</button>
+    <a id="dl-btn" class="dl-btn" target="_blank" rel="noopener">↓ Tải Ảnh Gốc</a>
+    <div class="img-counter" id="img-counter"></div>
+  </div>
 
-    <!-- Thanh lựa chọn danh mục & khu vực kèm icon -->
-    <div class="filter-container">
-        <div class="filter-section">
-            <label for="categorySelect">
-                <i class="fa-solid fa-images" style="color: #d81b60;"></i> Danh mục:
-            </label>
-            <select id="categorySelect" onchange="filterAlbum()">
-                <option value="all">Tất cả danh mục</option>
-                <option value="cuoi">Ảnh Ngày Cưới</option>
-                <option value="prewedding">Ảnh Pre-Wedding</option>
-                <option value="henho">Ảnh Hẹn Hò</option>
-            </select>
-        </div>
+  <div class="thumb-strip" id="thumb-strip"></div>
+</div>
 
-        <div class="filter-section">
-            <label for="regionSelect">
-                <i class="fa-solid fa-map-location-dot" style="color: #1e88e5;"></i> Khu vực:
-            </label>
-            <select id="regionSelect" onchange="filterAlbum()">
-                <option value="all">Tất cả khu vực</option>
-                <option value="trongnha">Trong nhà / Studio</option>
-                <option value="ngoaitroi">Ngoài trời / Ngoại cảnh</option>
-            </select>
-        </div>
-    </div>
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="Xem phóng to" onclick="event.stopPropagation()" />
+</div>
 
-    <!-- Bố cục cốt lõi: Lời chúc & Ảnh to -->
-    <div class="main-wrapper">
-        <div class="main-row">
-            
-            <!-- Cột trái: Lời chúc tự chạy -->
-            <div class="wishes-column">
-                <div class="wishes-title">
-                    <i class="fa-solid fa-heart-pulse" style="color: #d81b60;"></i> Lời Chúc Thân Thương
-                </div>
-                <div class="wishes-marquee-container">
-                    <div class="wishes-list" id="wishesContainer">
-                        <!-- Code JS sẽ tự động nạp lời chúc vào đây -->
-                    </div>
-                </div>
-            </div>
+<script>
+  // 🔴 THAY ĐƯỜNG LINK WEB APP APPS SCRIPT CỦA BẠN VÀO ĐÂY ĐỂ CHẠY
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZwuIYWh0HWLPhJVL63UvjlLtopC5rUjXujQ8Q5PIfipXcrV24Tj21U3ifeEb4b20AqA/exec";
 
-            <!-- Cột phải: Ảnh to -->
-            <div class="image-column">
-                <img src="" id="mainBigImage" class="main-image-display" alt="Mira Big Preview">
-                <div id="placeholderText" class="no-image-placeholder">
-                    <i class="fa-solid fa-spinner fa-spin fa-2xl" style="color: #d81b60;"></i><br><br>Đang đồng bộ dữ liệu ảnh từ Google Drive...
-                </div>
-            </div>
+  let images = [];
+  let current = 0;
 
-        </div>
-    </div>
+  window.onload = () => {
+    if(APPS_SCRIPT_URL.includes("DÁN_LINK")) {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('error-msg').classList.add('show');
+      document.getElementById('error-detail').textContent = "Bạn chưa cấu hình link APPS_SCRIPT_URL ở cuối file html.";
+      return;
+    }
+    loadAlbum();
+  };
 
-    <script src="script.js"></script>
+  async function loadAlbum() {
+    try {
+      const res = await fetch(APPS_SCRIPT_URL);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      if (!data.files || data.files.length === 0) throw new Error('Thư mục trống hoặc không tìm thấy hình ảnh.');
+
+      images = data.files;
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('album').classList.add('visible');
+      document.getElementById('album-count').textContent = images.length + ' ảnh';
+
+      buildThumbs();
+      
+      // Lấy ảnh hiển thị theo tham số i trên URL nếu có
+      const p = new URLSearchParams(location.search);
+      const startIdx = parseInt(p.get('i') || '0');
+      showImage(Math.min(startIdx, images.length - 1));
+    } catch (e) {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('error-msg').classList.add('show');
+      document.getElementById('error-detail').textContent = e.message;
+    }
+  }
+
+  function buildThumbs() {
+    const strip = document.getElementById('thumb-strip');
+    strip.innerHTML = '';
+    images.forEach((img, i) => {
+      const el = document.createElement('img');
+      el.className = 'thumb';
+      el.src = img.thumbnailLink;
+      el.alt = img.name;
+      el.loading = 'lazy';
+      el.onclick = () => showImage(i);
+      el.dataset.idx = i;
+      strip.appendChild(el);
+    });
+  }
+
+  function showImage(idx) {
+    current = idx;
+    const img = images[idx];
+    const mainImg = document.getElementById('main-img');
+
+    // Tự động chuyển đổi kích thước ảnh chất lượng cao mượt mà không bị lỗi 403 nhúng ảnh của Google
+    const displayUrl = img.thumbnailLink.replace(/=s\d+$/, '=s1600');
+
+    mainImg.classList.add('loading');
+    mainImg.src = displayUrl;
+    mainImg.onload = () => mainImg.classList.remove('loading');
+
+    document.getElementById('lightbox-img').src = displayUrl;
+    document.getElementById('dl-btn').href = img.webContentLink;
+    document.getElementById('img-counter').textContent = `${idx + 1} / ${images.length}`;
+
+    document.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
+    const activeThumb = document.querySelector(`.thumb[data-idx="${idx}"]`);
+    if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+    const p = new URLSearchParams(location.search);
+    p.set('i', idx);
+    history.replaceState({}, '', '?' + p.toString());
+  }
+
+  function prevImg() { if (images.length) showImage((current - 1 + images.length) % images.length); }
+  function nextImg() { if (images.length) showImage((current + 1) % images.length); }
+  function openLightbox() { document.getElementById('lightbox').classList.add('open'); }
+  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('lightbox').classList.contains('open')) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prevImg();
+      if (e.key === 'ArrowRight') nextImg();
+      return;
+    }
+    if (e.key === 'ArrowLeft') prevImg();
+    if (e.key === 'ArrowRight') nextImg();
+  });
+
+  let touchStartX = 0;
+  const viewer = document.getElementById('viewer-area');
+  viewer && viewer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  viewer && viewer.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) dx < 0 ? nextImg() : prevImg();
+  }, { passive: true });
+</script>
 </body>
 </html>
