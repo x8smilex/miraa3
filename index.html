@@ -218,21 +218,40 @@
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1JoIYMhXRxZB60HyIqSrnCzk54F0-ORbVrDSjRetoru6eW0FhmXyWswdIVpb7223l/exec";
 
+  // 📝 DANH SÁCH GIÁO VIÊN: name hiển thị có dấu, searchKey dùng để quét ảnh không dấu bọc ngoặc vuông
   const TEACHERS = [
-    { name: "[Ms Chinh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1PnSVp7XJ0NLG4m-IIqZfvDZ6hhdxFV7C" },
-    { name: "[Ms Hằng]", img: "https://drive.google.com/thumbnail?sz=w200&id=1cM9eptd5RVyqTYP07P8JutNMXV0SkYxm" },
-    { name: "[Ms Hà]", img: "https://drive.google.com/thumbnail?sz=w200&id=1YWwN4BZjzlcsHVRJPr0o4zSsE7Y3CBlv" },
-    { name: "[Ms Sinh]", img: "https://drive.google.com/thumbnail?sz=w200&id=17VdXNaMHszMnEb0tPQp1nQKZLfV6DrQr" },
-   
+    { name: "[Ms Chinh]", searchKey: "[cochinh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1PnSVp7XJ0NLG4m-IIqZfvDZ6hhdxFV7C" },
+    { name: "[Ms Hằng]", searchKey: "[cohang]", img: "https://drive.google.com/thumbnail?sz=w200&id=1cM9eptd5RVyqTYP07P8JutNMXV0SkYxm" },
+    { name: "[Ms Hà]", searchKey: "[coha]", img: "https://drive.google.com/thumbnail?sz=w200&id=1YWwN4BZjzlcsHVRJPr0o4zSsE7Y3CBlv" },
+    { name: "[Ms Sinh]", searchKey: "[cosinh]", img: "https://drive.google.com/thumbnail?sz=w200&id=17VdXNaMHszMnEb0tPQp1nQKZLfV6DrQr" }
   ];
 
+  // 📝 DANH SÁCH HỌC SINH: name giữ dấu tiếng Việt nguyên bản.
+  // Phần 'searchKey' viết liền không dấu và bọc ngoặc vuông để phân biệt chuẩn xác Tuyệt Đối các cụm từ trùng lặp ngầm.
   const STUDENTS = [
-    { name: "[Nhật Minh Soju]", img: "https://drive.google.com/thumbnail?sz=w200&id=1lnwa2YNWuS2gmQVwuy-Q24KE48m_dh1n" }, { name: "[Khánh Linh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1-mSbBTVXELfasRW2g-uOj1BmaFiCzzce" }, { name: "[Minh Trí]", img: "https://drive.google.com/thumbnail?sz=w200&id=1CnUCw0zUE5e6wKiHO48aof0ockwF6YCD" }, { name: "[Hiếu Minh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1Nlb6vsBPEEwn8CXiMyK3gZHNzuzPWE2V" },
-    { name: "[Ngọc Linh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1NaIPZrODX6KygxIyuBrynmXtCGY7SUct" }, { name: "Nhật Minh Ben", img: "https://drive.google.com/thumbnail?sz=w200&id=11LXdqTydvg86dawYNNZrx2JQI54v9tY3" }, { name: "[Thuỳ Dương]", img: "" }, { name: "[Kỳ Duyên]", img: "" },
-    { name: "[Trịnh Minh Anh]", img: "" }, { name: "[Nam Anh]", img: "" }, { name: "[Tường Anh]", img: "" }, { name: "[Minh Châu]", img: "" },
-    { name: "[Minh Khôi]", img: "" }, { name: "[Huỳnh Lâm]", img: "" }, { name: "[Phương Linh]", img: "" }, { name: "[Duy Minh]", img: "" },
-    { name: "[Lê Minh]", img: "" }, { name: "[Gia Ninh]", img: "" }, { name: "[Minh Quang]", img: "" }, { name: "[Bảo San]", img: "" },
-    { name: "[Anh Khôi]", img: "" }, { name: "[Tuệ Lâm]", img: "" }, { name: "[Nguyễn Minh Anh]", img: "" }
+    { name: "[Nhật Minh Soju]", searchKey: "[nhatminhsoju]", img: "https://drive.google.com/thumbnail?sz=w200&id=1lnwa2YNWuS2gmQVwuy-Q24KE48m_dh1n" }, 
+    { name: "[Khánh Linh]", searchKey: "[khanhlinh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1-mSbBTVXELfasRW2g-uOj1BmaFiCzzce" }, 
+    { name: "[Minh Trí]", searchKey: "[minhtri]", img: "https://drive.google.com/thumbnail?sz=w200&id=1CnUCw0zUE5e6wKiHO48aof0ockwF6YCD" }, 
+    { name: "[Hiếu Minh]", searchKey: "[hieuminh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1Nlb6vsBPEEwn8CXiMyK3gZHNzuzPWE2V" },
+    { name: "[Ngọc Linh]", searchKey: "[ngoclinh]", img: "https://drive.google.com/thumbnail?sz=w200&id=1NaIPZrODX6KygxIyuBrynmXtCGY7SUct" }, 
+    { name: "[Nhật Minh Ben]", searchKey: "[nhatminhben]", img: "https://drive.google.com/thumbnail?sz=w200&id=11LXdqTydvg86dawYNNZrx2JQI54v9tY3" }, 
+    { name: "[Thuỳ Dương]", searchKey: "[thuyduong]", img: "" }, 
+    { name: "[Kỳ Duyên]", searchKey: "[kyduyen]", img: "" },
+    { name: "[Trịnh Minh Anh]", searchKey: "[trinhminhanh]", img: "" }, 
+    { name: "[Nam Anh]", searchKey: "[namanh]", img: "" }, 
+    { name: "[Tường Anh]", searchKey: "[tuonganh]", img: "" }, 
+    { name: "[Minh Châu]", searchKey: "[minhchau]", img: "" },
+    { name: "[Minh Khôi]", searchKey: "[minhkhoi]", img: "" }, 
+    { name: "[Huỳnh Lâm]", searchKey: "[huynhlam]", img: "" }, 
+    { name: "[Phương Linh]", searchKey: "[phuonglinh]", img: "" }, 
+    { name: "[Duy Minh]", searchKey: "[duyminh]", img: "" },
+    { name: "[Lê Minh]", searchKey: "[leminh]", img: "" }, 
+    { name: "[Gia Ninh]", searchKey: "[gianinh]", img: "" }, 
+    { name: "[Minh Quang]", searchKey: "[minhquang]", img: "" }, 
+    { name: "[Bảo San]", searchKey: "[baosan]", img: "" },
+    { name: "[Anh Khôi]", searchKey: "[anhkhoi]", img: "" }, 
+    { name: "[Tuệ Lâm]", searchKey: "[tuelam]", img: "" }, 
+    { name: "[Nguyễn Minh Anh]", searchKey: "[nguyenminhanh]", img: "" }
   ];
 
   let masterImages = []; 
@@ -262,7 +281,8 @@
     const circle = document.createElement('div');
     circle.className = 'avatar-circle';
     circle.setAttribute('title', person.name);
-    circle.onclick = () => filterByPerson(person.name);
+    // ✨ ĐÃ SỬA: Truyền song song cả Tên hiển thị (name) và Từ khóa tìm kiếm ngầm (searchKey)
+    circle.onclick = () => filterByPerson(person.name, person.searchKey);
 
     if (person.img) {
       const img = document.createElement('img');
@@ -272,7 +292,9 @@
     } else {
       const initial = document.createElement('span');
       initial.className = 'avatar-initial';
-      initial.textContent = person.name.charAt(0).toUpperCase();
+      // Lấy chữ cái đầu tiên sau dấu ngoặc vuông làm ký tự đại diện ban đầu
+      const cleanName = person.name.replace('[', '');
+      initial.textContent = cleanName.charAt(0).toUpperCase();
       if(isTeacher) initial.style.color = '#fff';
       circle.appendChild(initial);
     }
@@ -280,22 +302,23 @@
     return circle;
   }
 
-  function filterByPerson(name) {
+  // ✨ ĐÃ SỬA: Hàm lọc mới nhận searchKey để so khớp tên tệp tin không lo trùng lặp dữ liệu
+  function filterByPerson(displayName, searchKey) {
     stopSlideshow();
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     currentTab = 'filter';
 
-    const searchKey = name.toLowerCase();
+    const key = searchKey.toLowerCase();
     
     images = masterImages.filter(img => {
       const fileName = (img.name || "").toLowerCase();
-      return fileName.includes(searchKey) || 
+      return fileName.includes(key) || 
              fileName.includes("tapthe") || 
              fileName.includes("calop");
     });
 
     const textEl = document.getElementById('album-count');
-    textEl.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> File của: <b>${name}</b> (${images.length})`;
+    textEl.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> File của: <b>${displayName}</b> (${images.length})`;
     
     buildThumbs();
 
